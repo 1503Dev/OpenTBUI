@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,7 +61,22 @@ public class MainActivity extends AppCompatActivity {
                 .addToggle("点击传送");
         tbUI.addCategory("世界", R.drawable.ic_discord_black_24dp)
                 .addToggle("空中行者（须手持可放置项目）")
-                .addToggle("快速拿取箱子物品");
+                .addToggle("快速拿取箱子物品")
+                .addToggle("范围破坏")
+                .addToggle("快速挖掘")
+                .addToggle("允许作弊获得成就")
+                .addToggle("快速建造")
+                .addToggle("快速建造 v2")
+                .addAction("获取项目", v -> {
+                    Toast.makeText(this, "点击了获取项目", Toast.LENGTH_SHORT).show();
+                })
+                .addAction("附魔", v -> {
+                    Toast.makeText(this, "点击了附魔", Toast.LENGTH_SHORT).show();
+                })
+                .addToggle("NBT编辑器")
+                .addToggle("触及范围")
+                .addToggle("触及范围修复（线上）")
+                .addToggle("覆盖名称");
         tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
         tbUI.addCategory("命令", R.drawable.ic_launcher_foreground);
         tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);

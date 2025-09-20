@@ -18,6 +18,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     private Context context;
     private Category selectedCategory;
     private OnCategoryClickListener listener;
+    private OnCategoryChangeListener changeListener;
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -85,6 +86,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     public void setSelectedCategory(Category category) {
+        if (changeListener != null && this.selectedCategory != category) {
+            changeListener.onCategoryChange(selectedCategory, categories.indexOf(category));
+        }
         this.selectedCategory = category;
         notifyDataSetChanged();
     }
@@ -98,7 +102,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         this.listener = listener;
     }
 
+    public void setOnCategoryChangeListener(OnCategoryChangeListener listener) {
+        this.changeListener = listener;
+    }
+
     public interface OnCategoryClickListener {
         void onCategoryClick(Category category, int position);
+    }
+
+    public interface OnCategoryChangeListener {
+        void onCategoryChange(Category category, int position);
     }
 }

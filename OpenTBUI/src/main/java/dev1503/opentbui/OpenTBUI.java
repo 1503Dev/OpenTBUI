@@ -34,6 +34,7 @@ public class OpenTBUI {
 
     boolean isInit = false;
     boolean isShown = false;
+    boolean isFirstShow = true;
 
     List<Category> categories = new ArrayList<>();
     RecyclerView categoriesView;
@@ -122,6 +123,12 @@ public class OpenTBUI {
             if (!isShown) {
                 windowManager.addView(contentView, params);
                 isShown = true;
+            }
+        }
+        if (isFirstShow) {
+            isFirstShow = false;
+            if (!categories.isEmpty()) {
+                featuresView.setAdapter(categories.get(0).getFeaturesAdapter());
             }
         }
     }

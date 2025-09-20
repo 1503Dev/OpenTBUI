@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:tag="layout/list_toggle_0"
+    android:tag="layout/list_action_0"
+    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="40dp">
     <TextView
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#FFFFFFFF"
         android:layout_gravity="center"
+        android:textColor="#FFFFFFFF"
         android:tag="binding_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingStart="16dp"/>
-    <androidx.appcompat.widget.SwitchCompat
+    <ImageView
         android:layout_gravity="center"
         android:id="@+id/toggle"
-        android:tag="binding_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:src="@drawable/ic_arrow_forward_black_24dp"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"/>
+        android:paddingEnd="28dp"
+        app:tint="#FFFFFFFF"/>
 </LinearLayout>
