@@ -41,6 +41,8 @@ public class OpenTBUI {
     CategoriesAdapter categoriesAdapter;
     RecyclerView featuresView;
 
+    Runnable onHideListener;
+
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
@@ -133,6 +135,11 @@ public class OpenTBUI {
         }
     }
     public void hide() {
+        if (isShown) {
+            if (onHideListener != null) {
+                onHideListener.run();
+            }
+        }
         contentView.setVisibility(View.GONE);
         if (windowType == WINDOW_TYPE_POPUP) {
             popupWindow.dismiss();
@@ -168,5 +175,11 @@ public class OpenTBUI {
     }
     void onCategoryClick(Category category) {
         featuresView.setAdapter(category.getFeaturesAdapter());
+    }
+    public boolean isShowing() {
+        return isShown;
+    }
+    public void setOnHideListener(Runnable onHideListener) {
+        this.onHideListener = onHideListener;
     }
 }
