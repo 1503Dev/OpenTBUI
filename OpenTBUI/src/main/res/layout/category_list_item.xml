@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+    android:textColor="@color/category_list_item_text_colors"
+    android:tag="layout/category_list_item_0"
+    android:background="@drawable/category_list_item_active_background"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:drawablePadding="16dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:gravity="center_vertical"
+    app:backgroundTint="@color/category_list_item_background_colors"
+    app:drawableTint="@color/category_list_item_icon_colors"/>
