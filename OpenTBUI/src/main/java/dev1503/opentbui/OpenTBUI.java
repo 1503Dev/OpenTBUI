@@ -167,7 +167,7 @@ public class OpenTBUI {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
     }
-    Category addCategory(String name, int iconId){
+    public Category addCategory(String name, int iconId){
         Category category = new Category(activity, name, iconId);
         categories.add(category);
 //        categoriesAdapter.addCategory(category);
