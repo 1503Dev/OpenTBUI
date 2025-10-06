@@ -32,13 +32,18 @@ public class TBToggle extends TBWidget{
         this(context, name, null);
     }
 
-    public void setChecked(boolean checked) {
+    public TBToggle setChecked(boolean checked) {
         switchCompat.setChecked(checked);
+        return this;
     }
     public boolean isChecked() {
         return switchCompat.isChecked();
     }
-    public void setOnCheckedChangeListener(SwitchCompat.OnCheckedChangeListener listener) {
+    public TBToggle setOnCheckedChangeListener(SwitchCompat.OnCheckedChangeListener listener) {
         switchCompat.setOnCheckedChangeListener(listener);
+        return this;
+    }
+    public SwitchCompat getSwitch() {
+        return switchCompat;
     }
 }

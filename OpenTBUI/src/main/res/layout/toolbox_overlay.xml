@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/Theme.AppCompat"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -52,7 +53,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_settings_black_24dp"
-                app:tint="#fff"/>
+                app:tint="#FFFFFF"
+                android:tint="#FFFFFF"
+                tools:ignore="UseAppTint" />
             <ImageView
                 android:id="@+id/help"
                 android:background="@drawable/settings_icon_background"
@@ -60,7 +63,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_help_outline_black_24dp"
-                app:tint="#fff"/>
+                app:tint="#FFFFFF"
+                android:tint="#FFFFFF"
+                tools:ignore="UseAppTint" />
             <ImageView
                 android:id="@+id/discord"
                 android:background="@drawable/settings_icon_background"
@@ -68,7 +73,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_discord_black_24dp"
-                app:tint="#fff"/>
+                app:tint="#FFFFFF"
+                android:tint="#FFFFFF"
+                tools:ignore="UseAppTint" />
         </LinearLayout>
     </FrameLayout>
 </RelativeLayout>

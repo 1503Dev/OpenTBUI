@@ -2,6 +2,7 @@ package dev1503.opentbui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
@@ -11,12 +12,19 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dev1503.opentbui.widgets.TBToggle;
+import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
     public static final int WINDOW_TYPE_POPUP = 0;
@@ -42,6 +50,7 @@ public class OpenTBUI {
     RecyclerView featuresView;
 
     Runnable onHideListener;
+    TBTheme theme;
 
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this.activity = activity;
@@ -84,9 +93,16 @@ public class OpenTBUI {
             popupWindow.setContentView(contentView);
             popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
             popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
-            popupWindow.setFocusable(true);
+            popupWindow.setFocusable(false);
             popupWindow.setOutsideTouchable(false);
             popupWindow.setBackgroundDrawable(null);
+            popupWindow.setClippingEnabled(false);
+            popupWindow.setOnDismissListener(() -> {
+                isShown = false;
+                if (onHideListener != null) {
+                    onHideListener.run();
+                }
+            });
         } else if (windowType == WINDOW_TYPE_GLOBAL) {
             windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             params = new WindowManager.LayoutParams(
@@ -101,6 +117,15 @@ public class OpenTBUI {
             }
             contentView.setFocusable(true);
         }
+
+        categoriesAdapter.setOnTextViewCreatedListener((textView, pos, isFirst) -> {
+            if (isFirst) {
+                textView.setBackgroundTintList(new ColorStateList(
+                        theme.getCategoryBackgroundStates(),
+                        theme.getCategoryBackgroundColors()
+                ));
+            }
+        });
     }
 
     public static OpenTBUI fromPopup(Activity activity, View rootView) {
@@ -179,7 +204,34 @@ public class OpenTBUI {
     public boolean isShowing() {
         return isShown;
     }
-    public void setOnHideListener(Runnable onHideListener) {
+    public OpenTBUI setOnHideListener(Runnable onHideListener) {
         this.onHideListener = onHideListener;
+        return this;
+    }
+    public OpenTBUI setTheme(TBTheme theme) {
+        this.theme = theme;
+        refreshTheme();
+        return this;
+    }
+    public OpenTBUI refreshTheme() {
+        if (theme != null) {
+            for (Category category : categories) {
+                for (TBWidget widget : category.getAllWidgets()) {
+                    if (widget instanceof TBToggle) {
+                        SwitchCompat switchCompat = ((TBToggle) widget).getSwitch();
+                        switchCompat.setThumbTintList(new ColorStateList(
+                                theme.getSwitchStates(),
+                                theme.getSwitchThumbColors()
+                        ));
+                        switchCompat.setTrackTintList(new ColorStateList(
+                                theme.getSwitchStates(),
+                                theme.getSwitchTrackColors()
+                        ));
+                        switchCompat.setBackground(theme.getRippleDrawable());
+                    }
+                }
+            }
+        }
+        return this;
     }
 }

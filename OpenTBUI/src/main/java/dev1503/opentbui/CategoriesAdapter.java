@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
@@ -19,11 +21,20 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     private Category selectedCategory;
     private OnCategoryClickListener listener;
     private OnCategoryChangeListener changeListener;
+    private List<TextView> allTextViews = new ArrayList<>();
+    private OnTextViewCreatedListener textViewCreatedListener;
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         TextView view = (TextView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.category_list_item, parent, false);
+
+        allTextViews.add(view);
+
+        if (textViewCreatedListener != null) {
+            textViewCreatedListener.onTextViewCreated(view, allTextViews.size() - 1, true);
+        }
+
         return new CategoryViewHolder(view);
     }
 
@@ -31,6 +42,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         Category category = categories.get(position);
         holder.bind(category);
+
+        if (textViewCreatedListener != null) {
+            textViewCreatedListener.onTextViewCreated(holder.textView, position, false);
+        }
     }
 
     @Override
@@ -112,5 +127,28 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     public interface OnCategoryChangeListener {
         void onCategoryChange(Category category, int position);
+    }
+
+    public List<TextView> getAllTextViews() {
+        return allTextViews;
+    }
+
+    public interface OnTextViewCreatedListener {
+        /**
+         * @param textView 被创建的 TextView
+         * @param position 位置（在onBindViewHolder中调用时是准确的）
+         * @param isInitialCreation 是否是初次创建（true=onCreateViewHolder, false=onBindViewHolder）
+         */
+        void onTextViewCreated(TextView textView, int position, boolean isInitialCreation);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull CategoryViewHolder holder) {
+        super.onViewRecycled(holder);
+        allTextViews.remove(holder.textView);
+    }
+
+    public void setOnTextViewCreatedListener(OnTextViewCreatedListener listener) {
+        this.textViewCreatedListener = listener;
     }
 }

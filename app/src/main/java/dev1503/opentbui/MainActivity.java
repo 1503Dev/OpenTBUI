@@ -1,10 +1,12 @@
 package dev1503.opentbui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        startActivity(new Intent(this, TestNativeActivity.class));
 
-        tbUI = OpenTBUI.fromGlobal(this);
+        tbUI = OpenTBUI.fromPopup(this);
         tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp)
                 .addToggle("飞行")
                 .addToggle("穿透飞行")
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
 
         tbUI.selectCategory(0);
+
+        tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
     }
 
     @Override

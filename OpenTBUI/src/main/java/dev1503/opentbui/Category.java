@@ -56,4 +56,7 @@ public class Category {
         addWidget(new TBAction(context, name));
         return this;
     }
+    public TBWidget[] getAllWidgets() {
+        return widgets.toArray(new TBWidget[0]);
+    }
 }
