@@ -228,6 +228,9 @@ public class OpenTBUI {
                                 theme.getSwitchTrackColors()
                         ));
                         switchCompat.setBackground(theme.getRippleDrawable());
+
+                        View statusView = ((TBToggle) widget).getStatusView();
+                        statusView.setBackgroundColor(theme.getColor1());
                     }
                 }
             }

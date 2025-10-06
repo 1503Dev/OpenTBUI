@@ -2,11 +2,12 @@ package dev1503.opentbui.widgets;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class TBWidget {
     String name;
-    LinearLayout view;
+    ViewGroup view;
 
     public TBWidget(Context context, String name) {
         this.name = name;

@@ -69,6 +69,12 @@ public class TBTheme {
     public int[] getCategoryBackgroundColors() {
         return categoryBackgroundColors;
     }
+    public int getColor1() {
+        return color1;
+    }
+    public int getColor2() {
+        return color2;
+    }
 
     public TBTheme setSwitchStates(int[][] switchStates) {
         this.switchStates = switchStates;
