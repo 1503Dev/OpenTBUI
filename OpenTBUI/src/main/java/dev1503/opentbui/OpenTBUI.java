@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,9 +23,14 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.warkiz.widget.IndicatorSeekBar;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
@@ -47,10 +55,18 @@ public class OpenTBUI {
     List<Category> categories = new ArrayList<>();
     RecyclerView categoriesView;
     CategoriesAdapter categoriesAdapter;
-    RecyclerView featuresView;
+    LinearLayout featuresView;
+    TextView remainingTimeText;
+
+    String minuteUnitText = "min";
+    String secondUnitText = "sec";
+    String remainingTimeTextTemp = "%s";
 
     Runnable onHideListener;
     TBTheme theme;
+
+    long premiumExpireTime = 0;
+    int premiumExpireTimeUpdateTimer = 0;
 
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this.activity = activity;
@@ -69,13 +85,6 @@ public class OpenTBUI {
         });
 
         featuresView = contentView.findViewById(R.id.options);
-        featuresView.setLayoutManager(new LinearLayoutManager(context));
-        featuresView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.set(0, 0, 0, 0); // 不添加间距
-            }
-        });
 
         contentView.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -126,6 +135,11 @@ public class OpenTBUI {
                 ));
             }
         });
+        remainingTimeText = contentView.findViewById(R.id.remaining_time_text);
+        minuteUnitText = context.getString(R.string.text_short_minutes);
+        secondUnitText = context.getString(R.string.text_short_seconds);
+        remainingTimeTextTemp = context.getString(R.string.premium_expire_text);
+        updatePremiumExpireTime();
     }
 
     public static OpenTBUI fromPopup(Activity activity, View rootView) {
@@ -155,7 +169,8 @@ public class OpenTBUI {
         if (isFirstShow) {
             isFirstShow = false;
             if (!categories.isEmpty()) {
-                featuresView.setAdapter(categories.get(0).getFeaturesAdapter());
+                featuresView.removeAllViews();
+                featuresView.addView(categories.get(0).getViewContainer());
             }
         }
     }
@@ -199,7 +214,8 @@ public class OpenTBUI {
         return category;
     }
     void onCategoryClick(Category category) {
-        featuresView.setAdapter(category.getFeaturesAdapter());
+        featuresView.removeAllViews();
+        featuresView.addView(category.getViewContainer());
     }
     public boolean isShowing() {
         return isShown;
@@ -216,7 +232,7 @@ public class OpenTBUI {
     public OpenTBUI refreshTheme() {
         if (theme != null) {
             for (Category category : categories) {
-                for (TBWidget widget : category.getAllWidgets()) {
+                for (TBWidget widget : category.getAllWidgetsAndSubWidgets()) {
                     if (widget instanceof TBToggle) {
                         SwitchCompat switchCompat = ((TBToggle) widget).getSwitch();
                         switchCompat.setThumbTintList(new ColorStateList(
@@ -231,10 +247,55 @@ public class OpenTBUI {
 
                         View statusView = ((TBToggle) widget).getStatusView();
                         statusView.setBackgroundColor(theme.getColor1());
+                    } else if (widget instanceof TBSlider) {
+                        IndicatorSeekBar seekBar = ((TBSlider) widget).getSeekBar();
+                        seekBar.setTrackColorInactive(theme.getSeekBarTrackColorInactive());
+                        seekBar.setTrackColorActive(theme.getSeekBarTrackColorActive());
+                        seekBar.tickMarksColor(theme.getSeekBarTickColor());
+                        seekBar.setThumbColor(theme.getSeekBarThumbColor());
+                        seekBar.setIndicatorColor(theme.getSeekBarIndicatorColor());
                     }
                 }
             }
         }
         return this;
+    }
+    public void setPremiumExpireSeconds(long seconds) {
+        premiumExpireTime = seconds;
+        updatePremiumExpireTime();
+    }
+    public void updatePremiumExpireTime() {
+        if (premiumExpireTime > 0) {
+            remainingTimeText.setVisibility(View.VISIBLE);
+            remainingTimeText.setText(String.format(remainingTimeTextTemp, getPremiumExpireTimeText()));
+        } else {
+            remainingTimeText.setText("");
+            remainingTimeText.setVisibility(View.GONE);
+        }
+    }
+
+    public void startUpdatePremiumExpireTimeTextTimer() {
+        premiumExpireTimeUpdateTimer++;
+        new Handler().postDelayed(() -> {
+            if (premiumExpireTimeUpdateTimer >= 1) {
+                premiumExpireTime--;
+                premiumExpireTimeUpdateTimer = 0;
+            }
+            activity.runOnUiThread(this::updatePremiumExpireTime);
+            startUpdatePremiumExpireTimeTextTimer();
+        }, 1000);
+    }
+
+    String getPremiumExpireTimeText() {
+        if (premiumExpireTime >= 60) {
+            String minutes = ((int)(premiumExpireTime / 60)) + "";
+            String seconds = ((int)(premiumExpireTime % 60)) + "";
+            return String.format(Locale.getDefault(), "%s%s %s%s",
+                    minutes, minuteUnitText,
+                    seconds, secondUnitText);
+        } else {
+            return String.format(Locale.getDefault(), "%d%s",
+                    premiumExpireTime, secondUnitText);
+        }
     }
 }

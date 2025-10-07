@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+def VERSION_NAME = "2.1.2"
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'indicatorseekbar'
+
+    publishedGroupId = 'com.github.warkiz.widget'
+    libraryName = 'IndicatorSeekbar'
+    artifact = 'indicatorseekbar'
+
+    libraryDescription = 'A custom SeekBar on Android, which can be changed the size ,color , thumb drawable , tick drawable , tick text and isb_indicator , also , will show an isb_indicator view with progress above SeekBar when seeking. '
+
+    siteUrl = 'https://github.com/warkiz/IndicatorSeekBar'
+    gitUrl = 'https://github.com/warkiz/IndicatorSeekBar.git'
+
+    libraryVersion = VERSION_NAME
+
+    developerId = 'warkiz'
+    developerName = 'Guangquan Chuang'
+    developerEmail = 'warkiz4j@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+android {
+    namespace "com.github.warkiz.widget.indicatorseekbar"
+
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 3
+        versionName VERSION_NAME
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+}
+
+
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

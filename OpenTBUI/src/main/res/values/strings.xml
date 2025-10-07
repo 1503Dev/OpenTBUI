@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_short_minutes">m</string>
+    <string name="text_short_seconds">s</string>
+    <string name="premium_expire_text">Premium expiring in %s</string>
+</resources>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.CollapsibleActionView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -15,6 +16,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import dev1503.opentbui.widgets.TBAction;
+import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,45 +50,50 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(new Intent(this, TestNativeActivity.class));
 
         tbUI = OpenTBUI.fromPopup(this);
-        tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp)
-                .addToggle("飞行")
-                .addToggle("穿透飞行")
-                .addToggle("穿透")
-                .addToggle("空中连跳")
-                .addToggle("跳高")
-                .addToggle("速度")
-                .addToggle("自动奔跑")
-                .addToggle("拉弓行走不减速")
-                .addToggle("慢速掉落")
-                .addToggle("水上行走")
-                .addToggle("停止发送数据包（仅多人游戏）")
-                .addToggle("鞘翅飞行")
-                .addToggle("点击传送");
-        tbUI.addCategory("世界", R.drawable.ic_discord_black_24dp)
-                .addToggle("空中行者（须手持可放置项目）")
-                .addToggle("快速拿取箱子物品")
-                .addToggle("范围破坏")
-                .addToggle("快速挖掘")
-                .addToggle("允许作弊获得成就")
-                .addToggle("快速建造")
-                .addToggle("快速建造 v2")
-                .addAction("获取项目", v -> {
+        Category categoryMovement = tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp);
+        categoryMovement.addToggle("飞行");
+        categoryMovement.addToggle("穿透飞行");
+        categoryMovement.addToggle("穿透");
+        categoryMovement.addToggle("空中连跳");
+        categoryMovement.addToggle("跳高")
+                .addItem(new TBSlider(this, "高度")
+                        .setValues(new float[]{1f, 2f, 3f, 4f, 5f, 6f}));
+        categoryMovement.addToggle("速度");
+        categoryMovement.addToggle("自动奔跑");
+        categoryMovement.addToggle("拉弓行走不减速");
+        categoryMovement.addToggle("慢速掉落");
+        categoryMovement.addToggle("水上行走");
+        categoryMovement.addToggle("停止发送数据包（仅多人游戏）");
+        categoryMovement.addToggle("鞘翅飞行");
+        categoryMovement.addToggle("点击传送");
+        Category categoryWorld = tbUI.addCategory("世界", R.drawable.ic_discord_black_24dp);
+        categoryWorld.addToggle("空中行者（须手持可放置项目）");
+        categoryWorld.addToggle("快速拿取箱子物品");
+        categoryWorld.addToggle("范围破坏");
+        categoryWorld.addToggle("快速挖掘");
+        categoryWorld.addToggle("允许作弊获得成就");
+        categoryWorld.addToggle("快速建造");
+        categoryWorld.addToggle("快速建造 v2");
+        categoryWorld.addAction("获取项目", v -> {
                     Toast.makeText(this, "点击了获取项目", Toast.LENGTH_SHORT).show();
-                })
-                .addAction("附魔", v -> {
+                });
+        categoryWorld.addAction("附魔", v -> {
                     Toast.makeText(this, "点击了附魔", Toast.LENGTH_SHORT).show();
-                })
-                .addToggle("NBT编辑器")
-                .addToggle("触及范围")
-                .addToggle("触及范围修复（线上）")
-                .addToggle("覆盖名称");
-        tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
+                });
+        categoryWorld.addToggle("NBT编辑器");
+        categoryWorld.addToggle("触及范围");
+        categoryWorld.addToggle("触及范围修复（线上）");
+        categoryWorld.addToggle("覆盖名称");
+        Category categoryRender = tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
         tbUI.addCategory("命令", R.drawable.ic_launcher_foreground);
         tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
 
         tbUI.selectCategory(0);
 
         tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+        tbUI.setPremiumExpireSeconds(500L);
+        tbUI.startUpdatePremiumExpireTimeTextTimer();
+
     }
 
     @Override

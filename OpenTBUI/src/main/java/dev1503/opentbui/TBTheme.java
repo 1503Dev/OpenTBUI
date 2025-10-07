@@ -13,6 +13,12 @@ public class TBTheme {
     RippleDrawable rippleDrawable;
     int[][] categoryBackgroundStates;
     int[] categoryBackgroundColors;
+    int seekBarThumbColor;
+    int seekBarTrackColorInactive;
+    int seekBarTrackColorActive;
+    int seekBarTickColor;
+    int seekBarIndicatorColor;
+
 
     int color1;
     int color2;
@@ -49,6 +55,12 @@ public class TBTheme {
                 Color.parseColor("#20FFFFFF"),
                 Color.TRANSPARENT
         };
+
+        this.seekBarThumbColor = color1;
+        this.seekBarTrackColorInactive = setColorAlpha(color1, 64);
+        this.seekBarTrackColorActive = color1;
+        this.seekBarTickColor = color1;
+        this.seekBarIndicatorColor = color1;
     }
 
     public int[][] getSwitchStates() {
@@ -69,12 +81,28 @@ public class TBTheme {
     public int[] getCategoryBackgroundColors() {
         return categoryBackgroundColors;
     }
+    public int getSeekBarThumbColor() {
+        return seekBarThumbColor;
+    }
+    public int getSeekBarTrackColorInactive() {
+        return seekBarTrackColorInactive;
+    }
+    public int getSeekBarTrackColorActive() {
+        return seekBarTrackColorActive;
+    }
+    public int getSeekBarTickColor() {
+        return seekBarTickColor;
+    }
     public int getColor1() {
         return color1;
     }
     public int getColor2() {
         return color2;
     }
+    public int getSeekBarIndicatorColor() {
+        return seekBarIndicatorColor;
+    }
+
 
     public TBTheme setSwitchStates(int[][] switchStates) {
         this.switchStates = switchStates;
@@ -98,6 +126,26 @@ public class TBTheme {
     }
     public TBTheme setCategoryBackgroundColors(int[] categoryBackgroundColors) {
         this.categoryBackgroundColors = categoryBackgroundColors;
+        return this;
+    }
+    public TBTheme setSeekBarThumbColor(int seekBarThumbColor) {
+        this.seekBarThumbColor = seekBarThumbColor;
+        return this;
+    }
+    public TBTheme setSeekBarTrackColorInactive(int seekBarTrackColorInactive) {
+        this.seekBarTrackColorInactive = seekBarTrackColorInactive;
+        return this;
+    }
+    public TBTheme setSeekBarTrackColorActive(int seekBarTrackColorActive) {
+        this.seekBarTrackColorActive = seekBarTrackColorActive;
+        return this;
+    }
+    public TBTheme setSeekBarTickColor(int seekBarTickColor) {
+        this.seekBarTickColor = seekBarTickColor;
+        return this;
+    }
+    public TBTheme setSeekBarIndicatorColor(int seekBarIndicatorColor) {
+        this.seekBarIndicatorColor = seekBarIndicatorColor;
         return this;
     }
 

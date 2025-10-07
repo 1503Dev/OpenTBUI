@@ -46,6 +46,8 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    // https://mvnrepository.com/artifact/com.github.warkiz.widget/indicatorseekbar
+//    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
 
     implementation(project(":OpenTBUI"))
 }

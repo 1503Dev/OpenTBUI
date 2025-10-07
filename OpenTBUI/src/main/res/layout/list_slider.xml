@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:tag="layout/list_slider_0"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+    <TextView
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_gravity="center"
+        android:tag="binding_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#FFFFFF"
+        android:paddingStart="16dp"/>
+    <com.warkiz.widget.IndicatorSeekBar
+        android:layout_gravity="center"
+        android:id="@+id/seekbar"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="24dp"
+        app:isb_indicator_color="#004411"
+        app:isb_min="0"
+        app:isb_show_tick_marks_type="oval"
+        app:isb_thumb_color="#AABBCC"
+        app:isb_show_tick_texts="true"
+        app:isb_tick_marks_color="#FFAADD"
+        app:isb_tick_marks_size="4dp"
+        app:isb_ticks_count="3"
+        app:isb_track_background_color="#AAA"
+        app:isb_track_progress_color="#FFF"/>
+</LinearLayout>
