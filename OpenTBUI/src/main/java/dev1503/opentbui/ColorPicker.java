@@ -5,6 +5,8 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,12 +24,15 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.w3c.dom.Text;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev1503.opentbui.view.ColorAlphaPicker;
 import dev1503.opentbui.view.ColorHuePicker;
 
 public class ColorPicker {
+    static boolean isUserInput = false;
+
     @SuppressLint("SetTextI18n")
     public static void open(Context context, TBTheme theme, @ColorInt int defaultColor, OnColorPickListener onColorPickListener){
         @SuppressLint("PrivateResource")
@@ -91,7 +96,12 @@ public class ColorPicker {
         colorAlphaPicker.addOnValueChangeListener(value -> {
             finalAlpha.set(Math.round(255 * value));
             finalColor.set(applyAlphaToColor(finalColor.get(), finalAlpha.get()));
-            valueA.setText(finalAlpha.get() + "");
+            String alphaStr = finalAlpha.get() + "";
+            isUserInput = false;
+            if (!Objects.requireNonNull(valueA.getText()).toString().equals(alphaStr)) {
+                valueA.setText(alphaStr);
+            }
+            isUserInput = true;
             updateViews(finalColor.get(), valueHex, valueR, valueG, valueB);
         });
         colorAlphaPicker.setValue(Color.alpha(defaultColor) / 255f);
@@ -111,14 +121,118 @@ public class ColorPicker {
         });
 
         btnDone.setTextColor(theme.getButtonTextColor());
+
+        valueA.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0 || !isUserInput) {
+                    return;
+                }
+                try {
+                    int num = max255(Integer.parseInt(charSequence.toString()));
+                    colorAlphaPicker.setValue(num / 255f);
+                } catch (NumberFormatException e) {
+                }
+            }
+        });
+        valueR.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0 || !isUserInput) {
+                    return;
+                }
+                try {
+                    int num = max255(Integer.parseInt(charSequence.toString()));
+                    colorPicker.setColor(applyRedToColor(colorPicker.getColor(), num));
+                } catch (NumberFormatException e) {
+                }
+            }
+        });
+        valueG.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0 || !isUserInput) {
+                    return;
+                }
+                try {
+                    int num = max255(Integer.parseInt(charSequence.toString()));
+                    colorPicker.setColor(applyGreenToColor(colorPicker.getColor(), num));
+                } catch (NumberFormatException e) {
+                }
+            }
+        });
+        valueB.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0 || !isUserInput) {
+                    return;
+                }
+                try {
+                    int num = max255(Integer.parseInt(charSequence.toString()));
+                    colorPicker.setColor(applyBlueToColor(colorPicker.getColor(), num));
+                } catch (NumberFormatException e) {
+                }
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
     public static void updateViews(int color, TextView valueHex, TextView valueR, TextView valueG, TextView valueB) {
-        valueR.setText(Color.red(color) + "");
-        valueG.setText(Color.green(color) + "");
-        valueB.setText(Color.blue(color) + "");
+        String redText = Color.red(color) + "";
+        String greenText = Color.green(color) + "";
+        String blueText = Color.blue(color) + "";
+        isUserInput = false;
+        if (!valueR.getText().toString().equals(redText)) {
+            valueR.setText(redText);
+        }
+        if (!valueG.getText().toString().equals(greenText)) {
+            valueG.setText(greenText);
+        }
+        if (!valueB.getText().toString().equals(blueText)) {
+            valueB.setText(blueText);
+        }
         valueHex.setText(toHexString(color));
+        isUserInput = true;
     }
 
     public interface OnColorPickListener{
@@ -136,11 +250,35 @@ public class ColorPicker {
     }
 
     public static int applyAlphaToColor(int rgbColor, int alpha) {
-        alpha = Math.max(0, Math.min(255, alpha));
+        alpha = max255(alpha);
         int rgb = 0x00FFFFFF & rgbColor;
         return (alpha << 24) | rgb;
     }
     public static String toHexString(int color) {
         return String.format("#%08X", color);
+    }
+    static int max255(int value) {
+        return Math.max(0, Math.min(255, value));
+    }
+    static int applyRedToColor(int rgbColor, int red) {
+        red = max255(red);
+        int green = Color.green(rgbColor);
+        int blue = Color.blue(rgbColor);
+        int alpha = Color.alpha(rgbColor);
+        return applyAlphaToColor(Color.rgb(red, green, blue), alpha);
+    }
+    static int applyGreenToColor(int rgbColor, int green) {
+        green = max255(green);
+        int red = Color.red(rgbColor);
+        int blue = Color.blue(rgbColor);
+        int alpha = Color.alpha(rgbColor);
+        return applyAlphaToColor(Color.rgb(red, green, blue), alpha);
+    }
+    static int applyBlueToColor(int rgbColor, int blue) {
+        blue = max255(blue);
+        int red = Color.red(rgbColor);
+        int green = Color.green(rgbColor);
+        int alpha = Color.alpha(rgbColor);
+        return applyAlphaToColor(Color.rgb(red, green, blue), alpha);
     }
 }

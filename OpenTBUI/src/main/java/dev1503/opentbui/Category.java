@@ -13,6 +13,7 @@ import java.util.List;
 
 import dev1503.opentbui.widgets.TBAction;
 import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
@@ -126,5 +127,35 @@ public class Category {
         TBColor tbColor = new TBColor(openTBUI, name);
         addWidget(tbColor);
         return tbColor;
+    }
+    public TBColor addColor(String name, int defaultColor) {
+        TBColor tbColor = new TBColor(openTBUI, name, defaultColor);
+        addWidget(tbColor);
+        return tbColor;
+    }
+    public TBColor addColor(String name, int defaultColor, ColorPicker.OnColorPickListener onColorPickListener) {
+        TBColor tbColor = new TBColor(openTBUI, name, defaultColor, onColorPickListener);
+        addWidget(tbColor);
+        return tbColor;
+    }
+    public TBEditText addEditText() {
+        TBEditText tbEditText = new TBEditText(openTBUI);
+        addWidget(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name);
+        addWidget(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name, String defaultText) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText);
+        addWidget(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name, String defaultText, TBEditText.OnTextChangeListener onTextChangeListener) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
+        addWidget(tbEditText);
+        return tbEditText;
     }
 }

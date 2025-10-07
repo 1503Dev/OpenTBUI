@@ -2,6 +2,7 @@ package dev1503.opentbui;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.CollapsibleActionView;
@@ -17,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import dev1503.opentbui.widgets.TBAction;
+import dev1503.opentbui.widgets.TBColor;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 .setValue(128)
                 .setDecimalScale(1);
         categoryWorld.addToggle("触及范围修复（线上）");
-        categoryWorld.addToggle("覆盖名称");
+        categoryWorld.addToggle("覆盖名称")
+                .addEditText("", "Open Toolbox User Interface");
 
         Category categoryRender = tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
         categoryRender.addToggle("透视");
@@ -126,10 +129,32 @@ public class MainActivity extends AppCompatActivity {
         categoryRender.addToggle("放大")
                         .addRangeSlider("倍数", -100, 100);
 
-        tbUI.addCategory("命令", R.drawable.ic_launcher_foreground);
+        tbUI.addCategory("命令", R.drawable.ic_arrow_forward_black_24dp);
         tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
 
-
+        Category tbuiCategory = tbUI.addCategory("OpenTBUI", R.drawable.ic_arrow_back_black_24dp);
+        TBToggle themeToggle = tbuiCategory.addToggle("主题", true);
+        TBColor color1 = themeToggle.addColor("主要颜色", Color.parseColor("#00E676"), color -> {
+            TBTheme theme = tbUI.getTheme();
+            tbUI.setTheme(new TBTheme(color, theme.getColor2()));
+        });
+        TBColor color2 = themeToggle.addColor("次要颜色", Color.parseColor("#43A047"), color -> {
+            TBTheme theme = tbUI.getTheme();
+            tbUI.setTheme(new TBTheme(theme.getColor1(), color));
+        });
+        themeToggle.addAction("重置", view -> {
+            color1.setColor(Color.parseColor("#00E676"));
+            color2.setColor(Color.parseColor("#43A047"));
+            tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+        });
+        tbuiCategory.addToggle("Test toggle").setChecked(true).addAction("action");
+        tbuiCategory.addSlider("slider", new float[]{0, 2, 50, 1503});
+        tbuiCategory.addRangeSlider("range slider", -1503, 1503);
+        tbuiCategory.addRangeSlider("Premium", 0, 15031503, (slider, v)->{
+            tbUI.setPremiumExpireSeconds((long) v);
+        });
+        tbuiCategory.addEditText("EditText", "abc");
+        tbuiCategory.addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃");
 
 
         tbUI.selectCategory(0);
@@ -147,5 +172,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void start(View view) {
         tbUI.show();
+    }
+
+    public void gh(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/1503Dev/OpenTBUI"));
+        startActivity(intent);
     }
 }

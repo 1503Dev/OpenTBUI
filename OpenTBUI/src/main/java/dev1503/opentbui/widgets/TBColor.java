@@ -32,12 +32,7 @@ public class TBColor extends TBWidget{
                 dp2px(context, 40)
         ));
         imageView = view.findViewWithTag("binding_2");
-        color = defaultColor;
-        imageView.setImageTintList(new ColorStateList(new int[][]{
-                new int[]{}
-        }, new int[]{
-                defaultColor
-        }));
+        setColor(defaultColor);
 
         textView = view.findViewWithTag("binding_1");
         textView.setText(name);
@@ -60,5 +55,18 @@ public class TBColor extends TBWidget{
     }
     public TBColor(OpenTBUI openTBUI, String name, @ColorInt int defaultColor) {
         this(openTBUI, name, defaultColor, null);
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        imageView.setImageTintList(new ColorStateList(new int[][]{
+                new int[]{}
+        }, new int[]{
+                color
+        }));
+    }
+
+    public @ColorInt int getColor() {
+        return color;
     }
 }

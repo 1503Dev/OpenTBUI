@@ -47,6 +47,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/value_hex"
                 android:textColor="#FFFFFF"
+                android:editable="false"
+                android:maxLength="9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -61,7 +63,9 @@
                 android:id="@+id/value_r"
                 android:textColorHint="#88FFFFFF"
                 android:textColor="#FFFFFF"
+                android:inputType="number"
                 android:layout_width="match_parent"
+                android:maxLength="3"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
@@ -74,6 +78,8 @@
                 android:id="@+id/value_g"
                 android:textColorHint="#88FFFFFF"
                 android:textColor="#FFFFFF"
+                android:inputType="number"
+                android:maxLength="3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -87,6 +93,8 @@
                 android:id="@+id/value_b"
                 android:textColorHint="#88FFFFFF"
                 android:textColor="#FFFFFF"
+                android:inputType="number"
+                android:maxLength="3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +107,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/value_a"
                 android:textColorHint="#88FFFFFF"
+                android:inputType="number"
                 android:textColor="#FFFFFF"
+                android:maxLength="3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>

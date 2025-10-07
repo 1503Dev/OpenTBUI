@@ -36,6 +36,8 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
+    public static final String VERSION_NAME = "v202510072152.2";
+
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
 
@@ -68,6 +70,8 @@ public class OpenTBUI {
 
     long premiumExpireTime = 0;
     int premiumExpireTimeUpdateTimer = 0;
+
+    List<TextView> categoryTextViews = new ArrayList<>();
 
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this.activity = activity;
@@ -130,6 +134,7 @@ public class OpenTBUI {
 
         categoriesAdapter.setOnTextViewCreatedListener((textView, pos, isFirst) -> {
             if (isFirst) {
+                categoryTextViews.add(textView);
                 textView.setBackgroundTintList(new ColorStateList(
                         theme.getCategoryBackgroundStates(),
                         theme.getCategoryBackgroundColors()
@@ -263,6 +268,14 @@ public class OpenTBUI {
                         seekBar.setThumbColor(theme.getSeekBarThumbColor());
                         seekBar.setIndicatorColor(theme.getSeekBarIndicatorColor());
                     }
+                }
+            }
+            for (TextView textView: categoryTextViews.toArray(new TextView[0])) {
+                if (textView != null) {
+                    textView.setBackgroundTintList(new ColorStateList(
+                            theme.getCategoryBackgroundStates(),
+                            theme.getCategoryBackgroundColors()
+                    ));
                 }
             }
         }

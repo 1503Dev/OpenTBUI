@@ -18,12 +18,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import dev1503.opentbui.ColorPicker;
 import dev1503.opentbui.FeaturesAdapter;
 import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
@@ -60,7 +62,7 @@ public class TBToggle extends TBWidget {
         switchCompat = toggleView.findViewWithTag("binding_2");
         textView.setText(name);
 
-        isStatusViewVisible = false;
+        isStatusViewVisible = !isChecked;
         switchCompat.setChecked(isChecked);
 
         switchCompat.setOnCheckedChangeListener((buttonView, _isChecked) -> {
@@ -92,7 +94,9 @@ public class TBToggle extends TBWidget {
         );
         statusView.setLayoutParams(statusViewLayoutParams);
         statusView.setBackgroundColor(Color.BLACK);
-        statusView.setVisibility(View.INVISIBLE);
+        if (!isChecked) {
+            statusView.setVisibility(View.INVISIBLE);
+        }
 
         container = new LinearLayout(context);
         container.setLayoutParams(new LinearLayout.LayoutParams(
@@ -220,12 +224,10 @@ public class TBToggle extends TBWidget {
         return this;
     }
     public TBToggle addItem(TBWidget item) {
-        Log.d("TBToggle", "addingItem: " + item.name);
         if (items != null) {
             initItemsContainer(false);
             items.add(item);
             itemsContainer.addView(item.getView());
-            Log.d("TBToggle", "addItem: " + item.name);
         }
         return this;
     }
@@ -243,6 +245,9 @@ public class TBToggle extends TBWidget {
             itemsContainer.setOrientation(LinearLayout.VERTICAL);
             itemsContainer.setVisibility(View.GONE);
             container.addView(itemsContainer);
+            if (isChecked()) {
+                fadeInItemsContainer();
+            }
         }
     }
     void fadeInItemsContainer() {
@@ -281,7 +286,7 @@ public class TBToggle extends TBWidget {
             @Override
             public void onAnimationEnd(Animator animation) {
                 itemsContainer.setVisibility(View.GONE);
-                itemsContainer.setAlpha(1f); // 重置透明度以便下次动画
+                itemsContainer.setAlpha(1f);
             }
         });
 
@@ -313,16 +318,24 @@ public class TBToggle extends TBWidget {
     }
 
     public TBToggle addToggle(String name) {
-        return addItem((new TBToggle(openTBUI, name)));
+        TBToggle toggle = new TBToggle(openTBUI, name);
+        addItem(toggle);
+        return toggle;
     }
     public TBToggle addToggle(String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
-        return addItem((new TBToggle(openTBUI, name, onCheckedChangeListener)));
+        TBToggle toggle = new TBToggle(openTBUI, name, onCheckedChangeListener);
+        addItem(toggle);
+        return toggle;
     }
     public TBToggle addToggle(String name, boolean isChecked) {
-        return addItem((new TBToggle(openTBUI, name, isChecked)));
+        TBToggle toggle = new TBToggle(openTBUI, name, isChecked);
+        addItem(toggle);
+        return toggle;
     }
     public TBToggle addToggle(String name, boolean isChecked, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
-        return addItem((new TBToggle(openTBUI, name, isChecked, onCheckedChangeListener)));
+        TBToggle toggle = new TBToggle(openTBUI, name, isChecked, onCheckedChangeListener);
+        addItem(toggle);
+        return toggle;
     }
 
     public TBAction addAction(String name) {
@@ -372,5 +385,41 @@ public class TBToggle extends TBWidget {
         TBColor tbColor = new TBColor(openTBUI, name);
         addItem(tbColor);
         return tbColor;
+    }
+    public TBColor addColor(String name, @ColorInt int color) {
+        TBColor tbColor = new TBColor(openTBUI, name, color);
+        addItem(tbColor);
+        return tbColor;
+    }
+    public TBColor addColor(String name, @ColorInt int color, ColorPicker.OnColorPickListener onColorPickListener) {
+        TBColor tbColor = new TBColor(openTBUI, name, color, onColorPickListener);
+        addItem(tbColor);
+        return tbColor;
+    }
+
+    public TBEditText addEditText() {
+        TBEditText tbEditText = new TBEditText(openTBUI);
+        addItem(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name);
+        addItem(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name, CharSequence defaultText) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText);
+        addItem(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name, CharSequence defaultText, TBEditText.OnTextChangeListener onTextChangeListener) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
+        addItem(tbEditText);
+        return tbEditText;
+    }
+    public TBEditText addEditText(String name, TBEditText.OnTextChangeListener onTextChangeListener) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, onTextChangeListener);
+        addItem(tbEditText);
+        return tbEditText;
     }
 }

@@ -27,5 +27,11 @@
         android:text="start"
         android:onClick="start"
         tools:ignore="MissingConstraints" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="https://github.com/1503Dev/OpenTBUI"
+        android:onClick="gh"
+        tools:ignore="MissingConstraints" />
 
 </LinearLayout>
