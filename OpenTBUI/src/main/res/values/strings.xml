@@ -3,4 +3,11 @@
     <string name="text_short_minutes">m</string>
     <string name="text_short_seconds">s</string>
     <string name="premium_expire_text">Premium expiring in %s</string>
+    <string name="action_back">Back</string>
+    <string name="action_done">Done</string>
+    <string name="color_value_hex">Hex</string>
+    <string name="color_value_red">Red</string>
+    <string name="color_value_green">Green</string>
+    <string name="color_value_blue">Blue</string>
+    <string name="color_value_alpha">Alpha</string>
 </resources>

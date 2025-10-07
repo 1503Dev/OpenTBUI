@@ -25,12 +25,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import dev1503.opentbui.FeaturesAdapter;
+import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
 
 public class TBToggle extends TBWidget {
     private static final long STATUS_VIEW_ANIM_TICK = 200;
-
-    Context context;
 
     TextView textView;
     SwitchCompat switchCompat;
@@ -45,9 +44,8 @@ public class TBToggle extends TBWidget {
     List<TBWidget> items = new ArrayList<>();
 
 
-    public TBToggle(Context context, String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
-        super(context, name);
-        this.context = context;
+    public TBToggle(OpenTBUI openTBUI, String name, boolean isChecked, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
+        super(openTBUI, name);
         toggleView = (LinearLayout) LinearLayout.inflate(context, R.layout.list_toggle, null);
         toggleView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -63,9 +61,10 @@ public class TBToggle extends TBWidget {
         textView.setText(name);
 
         isStatusViewVisible = false;
+        switchCompat.setChecked(isChecked);
 
-        switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+        switchCompat.setOnCheckedChangeListener((buttonView, _isChecked) -> {
+            if (_isChecked) {
                 statusViewSlideIn();
                 if (itemsContainer != null) {
                     fadeInItemsContainer();
@@ -77,7 +76,7 @@ public class TBToggle extends TBWidget {
                 }
             }
             if (onCheckedChangeListener != null) {
-                onCheckedChangeListener.onCheckedChanged(buttonView, isChecked);
+                onCheckedChangeListener.onCheckedChanged(buttonView, _isChecked);
             }
         });
         statusView = new View(context);
@@ -107,8 +106,14 @@ public class TBToggle extends TBWidget {
         view.addView(statusView);
     }
 
-    public TBToggle(Context context, String name) {
-        this(context, name, null);
+    public TBToggle(OpenTBUI openTBUI, String name) {
+        this(openTBUI, name, false, null);
+    }
+    public TBToggle(OpenTBUI openTBUI, String name, boolean isChecked) {
+        this(openTBUI, name, isChecked, null);
+    }
+    public TBToggle(OpenTBUI openTBUI, String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
+        this(openTBUI, name, false, onCheckedChangeListener);
     }
 
     public void statusViewSlideIn() {
@@ -305,5 +310,67 @@ public class TBToggle extends TBWidget {
             }
         }
         return views.toArray(new TBWidget[0]);
+    }
+
+    public TBToggle addToggle(String name) {
+        return addItem((new TBToggle(openTBUI, name)));
+    }
+    public TBToggle addToggle(String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
+        return addItem((new TBToggle(openTBUI, name, onCheckedChangeListener)));
+    }
+    public TBToggle addToggle(String name, boolean isChecked) {
+        return addItem((new TBToggle(openTBUI, name, isChecked)));
+    }
+    public TBToggle addToggle(String name, boolean isChecked, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
+        return addItem((new TBToggle(openTBUI, name, isChecked, onCheckedChangeListener)));
+    }
+
+    public TBAction addAction(String name) {
+        TBAction action = new TBAction(openTBUI, name);
+        addItem(action);
+        return action;
+    }
+    public TBAction addAction(String name, View.OnClickListener onClickListener) {
+        TBAction action = new TBAction(openTBUI, name, onClickListener);
+        addItem(action);
+        return action;
+    }
+
+    public TBSlider addSlider(String name) {
+        TBSlider slider = new TBSlider(openTBUI, name);
+        addItem(slider);
+        return slider;
+    }
+    public TBSlider addSlider(String name, TBSlider.OnValueChangeListener onValueChangeListener) {
+        TBSlider slider = new TBSlider(openTBUI, name, onValueChangeListener);
+        addItem(slider);
+        return slider;
+    }
+    public TBSlider addSlider(String name, float[] values) {
+        TBSlider slider = new TBSlider(openTBUI, name, values);
+        addItem(slider);
+        return slider;
+    }
+    public TBSlider addSlider(String name, float[] values, TBSlider.OnValueChangeListener onValueChangeListener) {
+        TBSlider slider = new TBSlider(openTBUI, name, values, onValueChangeListener);
+        addItem(slider);
+        return slider;
+    }
+
+    public TBRangeSlider addRangeSlider(String name, float min, float max) {
+        TBRangeSlider slider = new TBRangeSlider(openTBUI, name, min, max);
+        addItem(slider);
+        return slider;
+    }
+    public TBRangeSlider addRangeSlider(String name, float min, float max, TBRangeSlider.OnValueChangeListener onValueChangeListener) {
+        TBRangeSlider slider = new TBRangeSlider(openTBUI, name, min, max, onValueChangeListener);
+        addItem(slider);
+        return slider;
+    }
+
+    public TBColor addColor(String name) {
+        TBColor tbColor = new TBColor(openTBUI, name);
+        addItem(tbColor);
+        return tbColor;
     }
 }

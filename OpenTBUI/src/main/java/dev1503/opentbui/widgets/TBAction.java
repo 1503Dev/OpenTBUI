@@ -11,13 +11,14 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 
 import dev1503.opentbui.FeaturesAdapter;
+import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
 
 public class TBAction extends TBWidget{
     TextView textView;
 
-    public TBAction(Context context, String name, View.OnClickListener onClickListener) {
-        super(context, name);
+    public TBAction(OpenTBUI openTBUI, String name, View.OnClickListener onClickListener) {
+        super(openTBUI, name);
         view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_action, null);
         view.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -27,8 +28,8 @@ public class TBAction extends TBWidget{
         textView.setText(name);
         view.setOnClickListener(onClickListener);
     }
-    public TBAction(Context context, String name) {
-        this(context, name, null);
+    public TBAction(OpenTBUI openTBUI, String name) {
+        this(openTBUI, name, null);
     }
 
     public void setOnClickListener(View.OnClickListener listener) {

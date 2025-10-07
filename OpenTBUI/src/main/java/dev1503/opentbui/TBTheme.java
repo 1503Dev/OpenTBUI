@@ -18,7 +18,7 @@ public class TBTheme {
     int seekBarTrackColorActive;
     int seekBarTickColor;
     int seekBarIndicatorColor;
-
+    int buttonTextColor;
 
     int color1;
     int color2;
@@ -61,6 +61,7 @@ public class TBTheme {
         this.seekBarTrackColorActive = color1;
         this.seekBarTickColor = color1;
         this.seekBarIndicatorColor = color1;
+        this.buttonTextColor = color1;
     }
 
     public int[][] getSwitchStates() {
@@ -101,6 +102,9 @@ public class TBTheme {
     }
     public int getSeekBarIndicatorColor() {
         return seekBarIndicatorColor;
+    }
+    public int getButtonTextColor() {
+        return buttonTextColor;
     }
 
 

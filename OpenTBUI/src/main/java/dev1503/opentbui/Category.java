@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import dev1503.opentbui.widgets.TBAction;
+import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
@@ -25,9 +27,11 @@ public class Category {
     LinearLayout viewContainer;
 
     Activity context;
+    OpenTBUI openTBUI;
 
-    public Category (Activity context, String name, int iconId) {
-        this.context = context;
+    public Category (OpenTBUI openTBUI, String name, int iconId) {
+        this.context = openTBUI.getActivity();
+        this.openTBUI = openTBUI;
         this.name = name;
         this.iconId = iconId;
 //        featuresAdapter = new FeaturesAdapter(context, widgets);
@@ -52,22 +56,27 @@ public class Category {
     }
 
     public TBToggle addToggle(String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
-        TBToggle toggle = new TBToggle(context, name, onCheckedChangeListener);
+        TBToggle toggle = new TBToggle(openTBUI, name, onCheckedChangeListener);
         addWidget(toggle);
         return toggle;
     }
     public TBToggle addToggle(String name) {
-        TBToggle toggle = new TBToggle(context, name);
+        TBToggle toggle = new TBToggle(openTBUI, name);
+        addWidget(toggle);
+        return toggle;
+    }
+    public TBToggle addToggle(String name, boolean isChecked) {
+        TBToggle toggle = new TBToggle(openTBUI, name, isChecked);
         addWidget(toggle);
         return toggle;
     }
     public TBAction addAction(String name, View.OnClickListener onClickListener) {
-        TBAction action = new TBAction(context, name, onClickListener);
+        TBAction action = new TBAction(openTBUI, name, onClickListener);
         addWidget(action);
         return action;
     }
     public TBAction addAction(String name) {
-        TBAction action = new TBAction(context, name);
+        TBAction action = new TBAction(openTBUI, name);
         addWidget(action);
         return action;
     }
@@ -89,8 +98,33 @@ public class Category {
         return viewContainer;
     }
     public TBSlider addSlider(String name) {
-        TBSlider slider = new TBSlider(context, name);
+        TBSlider slider = new TBSlider(openTBUI, name);
         addWidget(slider);
         return slider;
+    }
+    public TBSlider addSlider(String name, float[] values, TBSlider.OnValueChangeListener onValueChangeListener) {
+        TBSlider slider = new TBSlider(openTBUI, name, values, onValueChangeListener);
+        addWidget(slider);
+        return slider;
+    }
+    public TBSlider addSlider(String name, float[] values) {
+        TBSlider slider = new TBSlider(openTBUI, name, values);
+        addWidget(slider);
+        return slider;
+    }
+    public TBRangeSlider addRangeSlider(String name, float min, float max) {
+        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, min, max);
+        addWidget(rangeSlider);
+        return rangeSlider;
+    }
+    public TBRangeSlider addRangeSlider(String name, float min, float max, TBRangeSlider.OnValueChangeListener onValueChangeListener) {
+        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, min, max, onValueChangeListener);
+        addWidget(rangeSlider);
+        return rangeSlider;
+    }
+    public TBColor addColor(String name) {
+        TBColor tbColor = new TBColor(openTBUI, name);
+        addWidget(tbColor);
+        return tbColor;
     }
 }

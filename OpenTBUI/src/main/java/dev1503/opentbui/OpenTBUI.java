@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
@@ -38,8 +39,8 @@ public class OpenTBUI {
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
 
-    Activity activity;
-    Context context;
+    protected Activity activity;
+    protected Context context;
 
     PopupWindow popupWindow;
     WindowManager windowManager;
@@ -208,7 +209,7 @@ public class OpenTBUI {
         );
     }
     public Category addCategory(String name, int iconId){
-        Category category = new Category(activity, name, iconId);
+        Category category = new Category(this, name, iconId);
         categories.add(category);
 //        categoriesAdapter.addCategory(category);
         return category;
@@ -249,6 +250,13 @@ public class OpenTBUI {
                         statusView.setBackgroundColor(theme.getColor1());
                     } else if (widget instanceof TBSlider) {
                         IndicatorSeekBar seekBar = ((TBSlider) widget).getSeekBar();
+                        seekBar.setTrackColorInactive(theme.getSeekBarTrackColorInactive());
+                        seekBar.setTrackColorActive(theme.getSeekBarTrackColorActive());
+                        seekBar.tickMarksColor(theme.getSeekBarTickColor());
+                        seekBar.setThumbColor(theme.getSeekBarThumbColor());
+                        seekBar.setIndicatorColor(theme.getSeekBarIndicatorColor());
+                    } else if (widget instanceof TBRangeSlider) {
+                        IndicatorSeekBar seekBar = ((TBRangeSlider) widget).getSeekBar();
                         seekBar.setTrackColorInactive(theme.getSeekBarTrackColorInactive());
                         seekBar.setTrackColorActive(theme.getSeekBarTrackColorActive());
                         seekBar.tickMarksColor(theme.getSeekBarTickColor());
@@ -297,5 +305,15 @@ public class OpenTBUI {
             return String.format(Locale.getDefault(), "%d%s",
                     premiumExpireTime, secondUnitText);
         }
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+    public Activity getActivity() {
+        return this.activity;
+    }
+    public TBTheme getTheme() {
+        return this.theme;
     }
 }
