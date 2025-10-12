@@ -1,37 +1,28 @@
 package dev1503.opentbui.picker;
 
-import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dev1503.opentbui.BottomSheet;
 import dev1503.opentbui.R;
 import dev1503.opentbui.TBTheme;
-import dev1503.opentbui.Utils;
 import dev1503.opentbui.view.ColorAlphaPicker;
 import dev1503.opentbui.view.ColorHuePicker;
 
-public class ColorPicker extends ExternalPicker {
+public class ColorPicker extends BottomSheet {
     boolean isUserInput = false;
     dev1503.opentbui.view.ColorPicker colorPicker;
     ColorHuePicker colorHuePicker;

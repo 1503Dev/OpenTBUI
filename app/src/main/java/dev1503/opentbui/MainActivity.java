@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         categoryWorld.addToggle("覆盖名称")
                 .addEditText("", "Open Toolbox User Interface");
 
-        Category categoryRender = tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
+        Category categoryRender = tbUI.addCategory("渲染", R.drawable.ic_help_outline_black_24dp);
         TBToggle toggleXray = categoryRender.addToggle("透视");
         TBEditText editTextXraySelected = toggleXray.addEditText("现行选中项");;
         TBBlockList blockList = toggleXray.addBlockList()
@@ -181,8 +181,20 @@ public class MainActivity extends AppCompatActivity {
         categoryRender.addToggle("放大")
                         .addRangeSlider("倍数", -100, 100);
 
-        tbUI.addCategory("命令", R.drawable.ic_arrow_forward_black_24dp);
-        tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
+        tbUI.addCategory("命令", R.drawable.ic_arrow_forward_black_24dp)
+                .addAction("To do ...");
+        Category categoryCombat = tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
+        TBToggle toggleKillaura = categoryCombat.addToggle("范围自动攻击");
+        toggleKillaura.addToggle("攻击生物");
+        toggleKillaura.addToggle("攻击玩家");
+        toggleKillaura.addRangeSlider("攻击间隔", -1, 20);
+        categoryCombat.addToggle("抗击退");
+        categoryCombat.addToggle("弓箭自瞄");
+        categoryCombat.addAction("传送到玩家");
+        TBToggle toggleHitbox = categoryCombat.addToggle("击中范围扩大");
+        toggleHitbox.addRangeSlider("生物击中范围", 1, 8);
+        toggleHitbox.addRangeSlider("玩家击中范围", 1, 8);
+        categoryCombat.addToggle("自动穿装");
 
         Category tbuiCategory = tbUI.addCategory("OpenTBUI", R.drawable.ic_arrow_back_black_24dp);
         TBToggle themeToggle = tbuiCategory.addToggle("主题", true);
@@ -227,7 +239,8 @@ public class MainActivity extends AppCompatActivity {
         tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
         tbUI.setPremiumExpireSeconds(500L);
         tbUI.startUpdatePremiumExpireTimeTextTimer();
-
+//        tbUI.setFeaturesViewWidth(Utils.dpToPx(this, 320));
+//        tbUI.setCategoriesViewWidth(Utils.dpToPx(this, 160));
     }
 
     @Override

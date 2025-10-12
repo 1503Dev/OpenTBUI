@@ -1,6 +1,6 @@
 package dev1503.opentbui.widgets;
 
-import static dev1503.opentbui.FeaturesAdapter.dp2px;
+import static com.warkiz.widget.SizeUtils.dp2px;
 
 import android.text.Editable;
 import android.text.TextWatcher;

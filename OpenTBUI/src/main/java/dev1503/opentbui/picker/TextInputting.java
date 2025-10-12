@@ -6,16 +6,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import java.util.Objects;
 
+import dev1503.opentbui.BottomSheet;
 import dev1503.opentbui.R;
 import dev1503.opentbui.TBTheme;
 import dev1503.opentbui.Utils;
 
-public class TextInputting extends ExternalPicker {
+public class TextInputting extends BottomSheet {
     ImageButton btnBack;
     Button btnDone;
 

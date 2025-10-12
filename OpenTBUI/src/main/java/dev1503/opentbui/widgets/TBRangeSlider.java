@@ -1,22 +1,14 @@
 package dev1503.opentbui.widgets;
-
-import static dev1503.opentbui.FeaturesAdapter.dp2px;
+import static dev1503.opentbui.Utils.dp2px;
 
 import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;

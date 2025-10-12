@@ -1,6 +1,6 @@
 package dev1503.opentbui.widgets;
 
-import static dev1503.opentbui.FeaturesAdapter.dp2px;
+import static dev1503.opentbui.Utils.dp2px;
 
 import android.view.View;
 import android.view.ViewGroup;

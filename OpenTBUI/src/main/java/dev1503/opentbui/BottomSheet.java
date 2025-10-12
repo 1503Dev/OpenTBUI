@@ -1,11 +1,10 @@
-package dev1503.opentbui.picker;
+package dev1503.opentbui;
 
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -15,16 +14,14 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import dev1503.opentbui.TBTheme;
-
-public class ExternalPicker {
+public class BottomSheet {
     protected Context context;
     protected TBTheme theme;
     protected BottomSheetDialog sheet;
     protected LinearLayout contentView;
 
     @SuppressLint("SetTextI18n")
-    public ExternalPicker(Context context, TBTheme theme, LinearLayout contentView){
+    public BottomSheet(Context context, TBTheme theme, LinearLayout contentView){
         this.context = context;
         this.theme = theme;
         this.contentView = contentView;

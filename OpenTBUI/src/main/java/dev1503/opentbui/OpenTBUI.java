@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -41,7 +42,7 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
-    public static final String VERSION_NAME = "v202510072152.2";
+    public static final String VERSION_NAME = "v202510121151.3";
 
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
@@ -349,4 +350,17 @@ public class OpenTBUI {
 //        }
 //        return this;
 //    }
+
+    public OpenTBUI setFeaturesViewWidth(int width) {
+        ViewGroup.LayoutParams layoutParams = featuresView.getLayoutParams();
+        layoutParams.width = width;
+        featuresView.setLayoutParams(layoutParams);
+        return this;
+    }
+    public OpenTBUI setCategoriesViewWidth(int width) {
+        ViewGroup.LayoutParams layoutParams = categoriesView.getLayoutParams();
+        layoutParams.width = width;
+        categoriesView.setLayoutParams(layoutParams);
+        return this;
+    }
 }

@@ -25,7 +25,6 @@ public class Category {
     int iconId;
 
     List<TBWidget> widgets = new ArrayList<>();
-    FeaturesAdapter featuresAdapter;
     LinearLayout viewContainer;
 
     Activity context;
@@ -52,9 +51,6 @@ public class Category {
 //        }
         viewContainer.addView(widget.getView());
         return this;
-    }
-    public FeaturesAdapter getFeaturesAdapter() {
-        return featuresAdapter;
     }
 
     public TBToggle addToggle(String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {

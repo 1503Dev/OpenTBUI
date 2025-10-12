@@ -39,10 +39,10 @@ public class TBBlockList extends TBWidget{
         Cube3DView cube3DView = new Cube3DView(context);
         cube3DView.setTextures(textures);
         circleSwitch.setContentView(cube3DView);
-        circleSwitch.setLayoutParams(new ViewGroup.LayoutParams(
-                Utils.dpToPx(context, 40),
-                Utils.dpToPx(context, 40)
-        ));
+//        circleSwitch.setLayoutParams(new ViewGroup.LayoutParams(
+//                Utils.dpToPx(context, 40),
+//                Utils.dpToPx(context, 40)
+//        ));
         circleSwitch.setSwitchListener(isOn -> {
             if (onSelectedItemChangeListener != null) {
                 List<String> selectedIds = new ArrayList<>();
