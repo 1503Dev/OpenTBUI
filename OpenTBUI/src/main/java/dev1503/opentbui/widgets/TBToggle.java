@@ -4,16 +4,11 @@ import static dev1503.opentbui.FeaturesAdapter.dp2px;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,8 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dev1503.opentbui.ColorPicker;
-import dev1503.opentbui.FeaturesAdapter;
+import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
 
@@ -412,14 +406,25 @@ public class TBToggle extends TBWidget {
         addItem(tbEditText);
         return tbEditText;
     }
-    public TBEditText addEditText(String name, CharSequence defaultText, TBEditText.OnTextChangeListener onTextChangeListener) {
+    public TBEditText addEditText(String name, CharSequence defaultText, TBEditText.OnTextInputFinishListener onTextChangeListener) {
         TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
         addItem(tbEditText);
         return tbEditText;
     }
-    public TBEditText addEditText(String name, TBEditText.OnTextChangeListener onTextChangeListener) {
+    public TBEditText addEditText(String name, TBEditText.OnTextInputFinishListener onTextChangeListener) {
         TBEditText tbEditText = new TBEditText(openTBUI, name, onTextChangeListener);
         addItem(tbEditText);
         return tbEditText;
+    }
+
+    public TBBlockList addBlockList() {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI);
+        addItem(tbBlockList);
+        return tbBlockList;
+    }
+    public TBBlockList addBlockList(TBBlockList.OnSelectedItemChangeListener listener) {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI, listener);
+        addItem(tbBlockList);
+        return tbBlockList;
     }
 }

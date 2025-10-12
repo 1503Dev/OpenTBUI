@@ -1,7 +1,12 @@
 package dev1503.opentbui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +14,7 @@ import android.view.CollapsibleActionView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,8 +23,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import dev1503.opentbui.view.CircleSwitch;
+import dev1503.opentbui.view.Cube3DView;
 import dev1503.opentbui.widgets.TBAction;
+import dev1503.opentbui.widgets.TBBlockList;
 import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 
@@ -26,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     OpenTBUI tbUI;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +59,21 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        CircleSwitch circleSwitch = findViewById(R.id.circleSwitch);
+        circleSwitch.setOnColor(Color.parseColor("#2000E676"));
+        circleSwitch.setSwitchListener(isOn -> {
+            Toast.makeText(this, "开关状态: " + isOn, Toast.LENGTH_SHORT).show();
+        });
+        TextView textView = new TextView(this);
+        textView.setText("AB");
+        circleSwitch.setContentView(textView);
+        Cube3DView cube = findViewById(R.id.cube);
+        cube.setTextures(new Bitmap[]{
+                drawableToBitmap(getDrawable(R.drawable.crafting_table_top)),
+                drawableToBitmap(getDrawable(R.drawable.crafting_table_front)),
+                drawableToBitmap(getDrawable(R.drawable.crafting_table_side))
+        });
 
-//        startActivity(new Intent(this, TestNativeActivity.class));
 
         tbUI = OpenTBUI.fromPopup(this);
         Category categoryMovement = tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp);
@@ -105,7 +129,35 @@ public class MainActivity extends AppCompatActivity {
                 .addEditText("", "Open Toolbox User Interface");
 
         Category categoryRender = tbUI.addCategory("渲染", R.drawable.small_colored_add_icon);
-        categoryRender.addToggle("透视");
+        TBToggle toggleXray = categoryRender.addToggle("透视");
+        TBEditText editTextXraySelected = toggleXray.addEditText("现行选中项");;
+        TBBlockList blockList = toggleXray.addBlockList()
+                .addItem("minecraft:crafting_table",
+                        getBitmapFromRes(R.drawable.crafting_table_top),
+                        getBitmapFromRes(R.drawable.crafting_table_front),
+                        getBitmapFromRes(R.drawable.crafting_table_side))
+                .addItem("minecraft:diamond_ore", getBitmapFromRes(R.drawable.diamond_ore))
+                .addItem("minecraft:chest",
+                        getBitmapFromRes(R.drawable.chest_top),
+                        getBitmapFromRes(R.drawable.chest_front),
+                        getBitmapFromRes(R.drawable.chest_side))
+                .addItem("minecraft:lava", getBitmapFromRes(R.drawable.lava_flow))
+                .addItem("minecraft:redstone_ore", getBitmapFromRes(R.drawable.redstone_ore))
+                .addItem("minecraft:diamond_block", getBitmapFromRes(R.drawable.diamond_block))
+                .addItem("minecraft:dirt", getBitmapFromRes(R.drawable.dirt))
+                .addItem("minecraft:amethyst_block", getBitmapFromRes(R.drawable.amethyst_block))
+                .setOnSelectedItemChangeListener((selectedIds) -> {
+                    if (selectedIds.length > 0) {
+                        StringBuilder selected = new StringBuilder();
+                        for (String selectedId : selectedIds) {
+                            selected.append(selectedId).append(", ");
+                        }
+                        selected.setLength(selected.length() - 2);
+                        editTextXraySelected.setText(selected.toString());
+                    } else {
+                        editTextXraySelected.setText("");
+                    }
+                });
         categoryRender.addToggle("箱子追踪");
         categoryRender.addToggle("玩家追踪");
         categoryRender.addToggle("方块更新追踪");
@@ -153,9 +205,22 @@ public class MainActivity extends AppCompatActivity {
         tbuiCategory.addRangeSlider("Premium", 0, 15031503, (slider, v)->{
             tbUI.setPremiumExpireSeconds((long) v);
         });
-        tbuiCategory.addEditText("EditText", "abc");
+        tbuiCategory.addEditText("EditText", "abc")
+                .setOnTextInputFinishListener((text) -> {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "输入了: " + text, Toast.LENGTH_SHORT).show();
+                    });
+                });
         tbuiCategory.addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃");
 
+        Category categoryOss = tbUI.addCategory("开放源代码许可", R.drawable.ic_help_outline_black_24dp);
+        categoryOss.addToggle("OpenTBUI", true).addAction("GPL-3.0 (暂行)");
+        categoryOss.addToggle("IndicatorSeekBar", true).addAction("Apache-2.0");
+        categoryOss.addToggle("AppCompat", true).addAction("Apache-2.0");
+        categoryOss.addToggle("MaterialComponents", true).addAction("Apache-2.0");
+        categoryOss.addToggle("AndroidX", true).addAction("Apache-2.0");
+        categoryOss.addToggle("RecyclerView", true).addAction("Apache-2.0");
+        categoryOss.addToggle("FlexBoxLayout", true).addAction("Apache-2.0");
 
         tbUI.selectCategory(0);
 
@@ -177,5 +242,28 @@ public class MainActivity extends AppCompatActivity {
     public void gh(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/1503Dev/OpenTBUI"));
         startActivity(intent);
+    }
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+
+        if (width <= 0) width = 1;
+        if (height <= 0) height = 1;
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public Bitmap getBitmapFromRes(int resId) {
+        return drawableToBitmap(getDrawable(resId));
     }
 }

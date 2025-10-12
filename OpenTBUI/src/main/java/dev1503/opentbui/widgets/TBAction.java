@@ -2,15 +2,11 @@ package dev1503.opentbui.widgets;
 
 import static dev1503.opentbui.FeaturesAdapter.dp2px;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.SwitchCompat;
-
-import dev1503.opentbui.FeaturesAdapter;
 import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
 

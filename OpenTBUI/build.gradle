@@ -30,5 +30,7 @@ dependencies {
     implementation('androidx.core:core:1.17.0')
     implementation('androidx.recyclerview:recyclerview:1.4.0')
     implementation(project(":indicatorseekbar"))
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("com.google.android.material:material:1.7.0")
+    // https://mvnrepository.com/artifact/com.google.android.flexbox/flexbox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

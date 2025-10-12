@@ -2,59 +2,60 @@ package dev1503.opentbui.widgets;
 
 import static dev1503.opentbui.FeaturesAdapter.dp2px;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.AppCompatEditText;
 
-import dev1503.opentbui.FeaturesAdapter;
+import java.util.Objects;
+
 import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
+import dev1503.opentbui.picker.TextInputting;
 
 public class TBEditText extends TBWidget{
-    EditText editText;
-    OnTextChangeListener onTextChangeListener;
+    AppCompatEditText editText;
+    OnTextInputFinishListener onTextInputFinishListener;
 
-    public TBEditText(OpenTBUI openTBUI, String name, CharSequence defaultText, OnTextChangeListener onTextChangeListener) {
+    public TBEditText(OpenTBUI openTBUI, String name, CharSequence defaultText, OnTextInputFinishListener _onTextInputFinishListener) {
         super(openTBUI, name);
         view = new LinearLayout(context);
         view.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
+        this.onTextInputFinishListener = _onTextInputFinishListener;
         view.setMinimumHeight(dp2px(context, 40));
-        view.setPadding(dp2px(context, 16), 0, dp2px(context, 16), 0);
-        editText = (EditText) View.inflate(context, R.layout.list_text_edit, null);
+        view.setPadding(dp2px(context, 12), 0, dp2px(context, 12), 0);
+        editText = (AppCompatEditText) View.inflate(context, R.layout.list_text_edit, null);
         editText.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        editText.setFocusable(true);
         view.addView(editText);
         editText.setHint(name);
         editText.setText(defaultText);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                new TextInputting(context, openTBUI.getTheme(), Objects.requireNonNull(editText.getText()).toString(), text -> {
+                    editText.setText(text);
+                    if (onTextInputFinishListener != null) {
+                        onTextInputFinishListener.onTextInputFinish(text);
+                    }
+                }).setHint(name);
             }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (onTextChangeListener != null) {
-                    onTextChangeListener.onTextChanged(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+        });
+        editText.setOnClickListener(v -> {
+            if (editText.hasFocus()) {
+                new TextInputting(context, openTBUI.getTheme(), Objects.requireNonNull(editText.getText()).toString(), text -> {
+                    editText.setText(text);
+                    if (onTextInputFinishListener != null) {
+                        onTextInputFinishListener.onTextInputFinish(text);
+                    }
+                }).setHint(name);
             }
         });
     }
@@ -67,20 +68,20 @@ public class TBEditText extends TBWidget{
     public TBEditText(OpenTBUI openTBUI, String name, CharSequence defaultText) {
         this(openTBUI, name, defaultText, null);
     }
-    public TBEditText(OpenTBUI openTBUI, String name, OnTextChangeListener onTextChangeListener) {
-        this(openTBUI, name, "", onTextChangeListener);
+    public TBEditText(OpenTBUI openTBUI, String name, OnTextInputFinishListener onTextInputFinishListener) {
+        this(openTBUI, name, "", onTextInputFinishListener);
     }
-    public TBEditText(OpenTBUI openTBUI, OnTextChangeListener onTextChangeListener) {
-        this(openTBUI, "", "", onTextChangeListener);
+    public TBEditText(OpenTBUI openTBUI, OnTextInputFinishListener onTextInputFinishListener) {
+        this(openTBUI, "", "", onTextInputFinishListener);
     }
 
-    public TBEditText setOnTextChangeListener(OnTextChangeListener onTextChangeListener) {
-        this.onTextChangeListener = onTextChangeListener;
+    public TBEditText setOnTextInputFinishListener(OnTextInputFinishListener onTextInputFinishListener) {
+        this.onTextInputFinishListener = onTextInputFinishListener;
         return this;
     }
 
-    public interface OnTextChangeListener {
-        void onTextChanged(String text);
+    public interface OnTextInputFinishListener {
+        void onTextInputFinish(String text);
     }
     public String getText() {
         return editText.getText().toString();
@@ -93,7 +94,7 @@ public class TBEditText extends TBWidget{
         editText.setMaxLines(maxLines);
         return this;
     }
-    public EditText getEditText() {
+    public AppCompatEditText getEditText() {
         return editText;
     }
 }

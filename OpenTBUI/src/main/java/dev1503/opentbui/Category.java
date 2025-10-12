@@ -1,7 +1,6 @@
 package dev1503.opentbui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -11,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.widgets.TBAction;
+import dev1503.opentbui.widgets.TBBlockList;
 import dev1503.opentbui.widgets.TBColor;
 import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBRangeSlider;
@@ -153,9 +154,19 @@ public class Category {
         addWidget(tbEditText);
         return tbEditText;
     }
-    public TBEditText addEditText(String name, String defaultText, TBEditText.OnTextChangeListener onTextChangeListener) {
+    public TBEditText addEditText(String name, String defaultText, TBEditText.OnTextInputFinishListener onTextChangeListener) {
         TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
         addWidget(tbEditText);
         return tbEditText;
+    }
+    public TBBlockList addBlockList() {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI);
+        addWidget(tbBlockList);
+        return tbBlockList;
+    }
+    public TBBlockList addBlockList(TBBlockList.OnSelectedItemChangeListener listener) {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI, listener);
+        addWidget(tbBlockList);
+        return tbBlockList;
     }
 }

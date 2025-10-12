@@ -50,4 +50,5 @@ dependencies {
 //    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
 
     implementation(project(":OpenTBUI"))
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

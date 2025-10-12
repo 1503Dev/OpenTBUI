@@ -13,12 +13,14 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +32,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import dev1503.opentbui.view.CircleSwitch;
+import dev1503.opentbui.widgets.TBBlockList;
+import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
@@ -267,6 +272,14 @@ public class OpenTBUI {
                         seekBar.tickMarksColor(theme.getSeekBarTickColor());
                         seekBar.setThumbColor(theme.getSeekBarThumbColor());
                         seekBar.setIndicatorColor(theme.getSeekBarIndicatorColor());
+                    } else if (widget instanceof TBEditText) {
+                        AppCompatEditText editText = ((TBEditText) widget).getEditText();
+                        Utils.setEditTextUnderlineColorAndCursorColor(editText, theme.getEditTextUnderlineColor());
+                    } else if (widget instanceof TBBlockList) {
+                        CircleSwitch[] circleSwitches = ((TBBlockList) widget).getCircleSwitches();
+                        for (CircleSwitch circleSwitch : circleSwitches) {
+                            circleSwitch.setOnColor(theme.getCircleSwitchBackgroundColor());
+                        }
                     }
                 }
             }
@@ -329,4 +342,11 @@ public class OpenTBUI {
     public TBTheme getTheme() {
         return this.theme;
     }
+
+//    public OpenTBUI setFocusable(boolean focusable) {
+//        if (windowType == WINDOW_TYPE_POPUP) {
+//            popupWindow.setFocusable(focusable);
+//        }
+//        return this;
+//    }
 }

@@ -1,4 +1,4 @@
-package dev1503.opentbui;
+package dev1503.opentbui.picker;
 
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 
@@ -22,71 +22,54 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.w3c.dom.Text;
-
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dev1503.opentbui.R;
+import dev1503.opentbui.TBTheme;
+import dev1503.opentbui.Utils;
 import dev1503.opentbui.view.ColorAlphaPicker;
 import dev1503.opentbui.view.ColorHuePicker;
 
-public class ColorPicker {
-    static boolean isUserInput = false;
+public class ColorPicker extends ExternalPicker {
+    boolean isUserInput = false;
+    dev1503.opentbui.view.ColorPicker colorPicker;
+    ColorHuePicker colorHuePicker;
+    ColorAlphaPicker colorAlphaPicker;
+
+    TextInputEditText valueHex;
+    TextInputEditText valueR;
+    TextInputEditText valueG;
+    TextInputEditText valueB;
+    TextInputEditText valueA;
+
+    AtomicInteger finalColor = new AtomicInteger();
+    AtomicInteger finalAlpha = new AtomicInteger(255);
+
+
+    ImageButton btnBack;
+    Button btnDone;
 
     @SuppressLint("SetTextI18n")
-    public static void open(Context context, TBTheme theme, @ColorInt int defaultColor, OnColorPickListener onColorPickListener){
-        @SuppressLint("PrivateResource")
-        BottomSheetDialog sheet = new BottomSheetDialog(context, com.google.android.material.R.style.Theme_MaterialComponents_BottomSheetDialog);
+    public ColorPicker(Context context, TBTheme theme, @ColorInt int defaultColor, OnColorPickListener onColorPickListener){
+        super(context, theme, (LinearLayout) LinearLayout.inflate(context, R.layout.dialog_color_picker, null));
 
-        Window window = sheet.getWindow();
-        if (window != null) {
-            WindowCompat.setDecorFitsSystemWindows(window, false);
-
-            WindowInsetsControllerCompat insetsController = WindowCompat.getInsetsController(window, window.getDecorView());
-            if (insetsController != null) {
-                insetsController.setSystemBarsBehavior(
-                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                );
-            }
-
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            );
-        }
-        AtomicInteger finalColor = new AtomicInteger();
-        AtomicInteger finalAlpha = new AtomicInteger(255);
-
-        dev1503.opentbui.view.ColorPicker colorPicker;
-        ColorHuePicker colorHuePicker;
-        ColorAlphaPicker colorAlphaPicker;
-
-        TextInputEditText valueHex;
-        TextInputEditText valueR;
-        TextInputEditText valueG;
-        TextInputEditText valueB;
-        TextInputEditText valueA;
-
-        ImageButton btnBack;
-        Button btnDone;
-
-        LinearLayout layout = (LinearLayout) LinearLayout.inflate(context, R.layout.dialog_color_picker, null);
-        colorPicker = layout.findViewById(R.id.picker);
-        colorHuePicker = layout.findViewById(R.id.hue);
-        colorAlphaPicker = layout.findViewById(R.id.alpha);
-        valueHex = layout.findViewById(R.id.value_hex);
-        valueR = layout.findViewById(R.id.value_r);
-        valueG = layout.findViewById(R.id.value_g);
-        valueB = layout.findViewById(R.id.value_b);
-        valueA = layout.findViewById(R.id.value_a);
-        btnBack = layout.findViewWithTag("binding_1");
-        btnDone = layout.findViewWithTag("binding_2");
+        colorPicker = contentView.findViewById(R.id.picker);
+        colorHuePicker = contentView.findViewById(R.id.hue);
+        colorAlphaPicker = contentView.findViewById(R.id.alpha);
+        valueHex = contentView.findViewById(R.id.value_hex);
+        valueR = contentView.findViewById(R.id.value_r);
+        valueG = contentView.findViewById(R.id.value_g);
+        valueB = contentView.findViewById(R.id.value_b);
+        valueA = contentView.findViewById(R.id.value_a);
+        btnBack = contentView.findViewWithTag("binding_1");
+        btnDone = contentView.findViewWithTag("binding_2");
 
         colorPicker.setHuePicker(colorHuePicker);
         colorPicker.addOnColorChangeListener(color -> {
             colorAlphaPicker.setColor(color);
             finalColor.set(applyAlphaToColor(color, finalAlpha.get()));
-            updateViews(finalColor.get(), valueHex, valueR, valueG, valueB);
+            updateViews();
         });
         float[] hsv = {0, 0, 0};
         Color.colorToHSV(defaultColor, hsv);
@@ -102,15 +85,10 @@ public class ColorPicker {
                 valueA.setText(alphaStr);
             }
             isUserInput = true;
-            updateViews(finalColor.get(), valueHex, valueR, valueG, valueB);
+            updateViews();
         });
         colorAlphaPicker.setValue(Color.alpha(defaultColor) / 255f);
 
-        sheet.setContentView(layout);
-        sheet.show();
-        sheet.setCanceledOnTouchOutside(false);
-        sheet.getBehavior().setMaxHeight(getScreenHeight(context));
-        sheet.getBehavior().setState(STATE_EXPANDED);
 
         btnBack.setOnClickListener(view -> {
             sheet.cancel();
@@ -214,10 +192,13 @@ public class ColorPicker {
                 }
             }
         });
+
+        show();
     }
 
     @SuppressLint("SetTextI18n")
-    public static void updateViews(int color, TextView valueHex, TextView valueR, TextView valueG, TextView valueB) {
+    public void updateViews() {
+        int color = finalColor.get();
         String redText = Color.red(color) + "";
         String greenText = Color.green(color) + "";
         String blueText = Color.blue(color) + "";
@@ -237,16 +218,6 @@ public class ColorPicker {
 
     public interface OnColorPickListener{
         void onColorPick(int color);
-    }
-
-    private static int getScreenHeight(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.heightPixels;
-        }
-        return 0;
     }
 
     public static int applyAlphaToColor(int rgbColor, int alpha) {

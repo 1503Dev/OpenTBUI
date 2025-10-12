@@ -19,6 +19,9 @@ public class TBTheme {
     int seekBarTickColor;
     int seekBarIndicatorColor;
     int buttonTextColor;
+    int editTextUnderlineColor;
+    int editTextCursorColor;
+    int circleSwitchBackgroundColor;
 
     int color1;
     int color2;
@@ -35,10 +38,10 @@ public class TBTheme {
                 Color.parseColor("#FFECECEC")
         };
         this.switchTrackColors = new int[] {
-                setColorAlpha(color1, 127),
+                Utils.colorApplyMultiplyAlpha(color1, 0.5f),
                 Color.parseColor("#88ECECEC")
         };
-        ColorStateList rippleColorStateList = ColorStateList.valueOf(setColorAlpha(color1, 64));
+        ColorStateList rippleColorStateList = ColorStateList.valueOf(Utils.colorApplyMultiplyAlpha(color1, 64f / 255f));
         rippleDrawable = new RippleDrawable(
                 rippleColorStateList,
                 null,
@@ -62,6 +65,9 @@ public class TBTheme {
         this.seekBarTickColor = color1;
         this.seekBarIndicatorColor = color1;
         this.buttonTextColor = color1;
+        this.editTextUnderlineColor = color1;
+        this.editTextCursorColor = color1;
+        this.circleSwitchBackgroundColor = Utils.colorApplyMultiplyAlpha(color1, (float) 0x30 / 0xFF);
     }
 
     public int[][] getSwitchStates() {
@@ -105,6 +111,15 @@ public class TBTheme {
     }
     public int getButtonTextColor() {
         return buttonTextColor;
+    }
+    public int getEditTextUnderlineColor() {
+        return editTextUnderlineColor;
+    }
+    public int getEditTextCursorColor() {
+        return editTextCursorColor;
+    }
+    public int getCircleSwitchBackgroundColor() {
+        return circleSwitchBackgroundColor;
     }
 
 
@@ -150,6 +165,22 @@ public class TBTheme {
     }
     public TBTheme setSeekBarIndicatorColor(int seekBarIndicatorColor) {
         this.seekBarIndicatorColor = seekBarIndicatorColor;
+        return this;
+    }
+    public TBTheme setButtonTextColor(int buttonTextColor) {
+        this.buttonTextColor = buttonTextColor;
+        return this;
+    }
+    public TBTheme setEditTextUnderlineColor(int editTextUnderlineColor) {
+        this.editTextUnderlineColor = editTextUnderlineColor;
+        return this;
+    }
+    public TBTheme setEditTextCursorColor(int editTextCursorColor) {
+        this.editTextCursorColor = editTextCursorColor;
+        return this;
+    }
+    public TBTheme setCircleSwitchBackgroundColor(int circleSwitchBackgroundColor) {
+        this.circleSwitchBackgroundColor = circleSwitchBackgroundColor;
         return this;
     }
 
