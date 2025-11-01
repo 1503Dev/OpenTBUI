@@ -20,8 +20,8 @@ public class TBEditText extends TBWidget{
     AppCompatEditText editText;
     OnTextInputFinishListener onTextInputFinishListener;
 
-    public TBEditText(OpenTBUI openTBUI, String name, CharSequence defaultText, OnTextInputFinishListener _onTextInputFinishListener) {
-        super(openTBUI, name);
+    public TBEditText(OpenTBUI openTBUI, String name, String path, CharSequence defaultText, OnTextInputFinishListener _onTextInputFinishListener) {
+        super(openTBUI, name, path);
         view = new LinearLayout(context);
         view.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -59,20 +59,29 @@ public class TBEditText extends TBWidget{
             }
         });
     }
+    public TBEditText(OpenTBUI openTBUI, String name, String path, CharSequence defaultText) {
+        this(openTBUI, name, path, defaultText, null);
+    }
+    public TBEditText(OpenTBUI openTBUI, String name, String path, OnTextInputFinishListener onTextInputFinishListener) {
+        this(openTBUI, name, path, "", onTextInputFinishListener);
+    }
+    public TBEditText(OpenTBUI openTBUI, String name, String path) {
+        this(openTBUI, name, path, "");
+    }
     public TBEditText(OpenTBUI openTBUI, String name) {
-        this(openTBUI, name, "", null);
+        this(openTBUI, name, null, "");
     }
     public TBEditText(OpenTBUI openTBUI) {
-        this(openTBUI, "", "", null);
+        this(openTBUI, "", "", "");
     }
     public TBEditText(OpenTBUI openTBUI, String name, CharSequence defaultText) {
-        this(openTBUI, name, defaultText, null);
+        this(openTBUI, name, null, defaultText);
     }
     public TBEditText(OpenTBUI openTBUI, String name, OnTextInputFinishListener onTextInputFinishListener) {
-        this(openTBUI, name, "", onTextInputFinishListener);
+        this(openTBUI, name, null, "", onTextInputFinishListener);
     }
     public TBEditText(OpenTBUI openTBUI, OnTextInputFinishListener onTextInputFinishListener) {
-        this(openTBUI, "", "", onTextInputFinishListener);
+        this(openTBUI, "", null, "", onTextInputFinishListener);
     }
 
     public TBEditText setOnTextInputFinishListener(OnTextInputFinishListener onTextInputFinishListener) {
@@ -86,8 +95,15 @@ public class TBEditText extends TBWidget{
     public String getText() {
         return editText.getText().toString();
     }
-    public TBEditText setText(String text) {
+    public TBEditText setTextWithoutNotify(String text) {
         editText.setText(text);
+        return this;
+    }
+    public TBEditText setText(String text) {
+        setTextWithoutNotify(text);
+        if (onTextInputFinishListener != null) {
+            onTextInputFinishListener.onTextInputFinish(text);
+        }
         return this;
     }
     public TBEditText setMaxLines(int maxLines) {

@@ -18,8 +18,8 @@ ext {
     libraryVersion = VERSION_NAME
 
     developerId = 'warkiz'
-    developerName = 'Guangquan Chuang'
-    developerEmail = 'warkiz4j@gmail.com'
+    developerName = 'Guangquan Chuang & TheChuan1503'
+    developerEmail = 'thechuan1503@1503dev.top'
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
@@ -29,12 +29,12 @@ ext {
 android {
     namespace "com.github.warkiz.widget.indicatorseekbar"
 
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 33
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 33
         versionCode 3
         versionName VERSION_NAME
     }
@@ -47,7 +47,8 @@ android {
 }
 
 dependencies {
-    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+    implementation libs.annotation.jvm
+    compileOnly 'androidx.appcompat:appcompat:1.0.0'
 }
 
 

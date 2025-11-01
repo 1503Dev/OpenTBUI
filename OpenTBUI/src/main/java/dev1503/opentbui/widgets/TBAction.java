@@ -12,9 +12,10 @@ import dev1503.opentbui.R;
 
 public class TBAction extends TBWidget{
     TextView textView;
+    View.OnClickListener listener;
 
-    public TBAction(OpenTBUI openTBUI, String name, View.OnClickListener onClickListener) {
-        super(openTBUI, name);
+    public TBAction(OpenTBUI openTBUI, String name, String path, View.OnClickListener onClickListener) {
+        super(openTBUI, name, path);
         view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_action, null);
         view.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -22,13 +23,27 @@ public class TBAction extends TBWidget{
         ));
         textView = view.findViewWithTag("binding_1");
         textView.setText(name);
-        view.setOnClickListener(onClickListener);
+        this.listener = onClickListener;
+        view.setOnClickListener(view -> {
+            if (listener != null) {
+                listener.onClick(view);
+            }
+            if  (openTBUI.getStatusManager() != null) {
+                openTBUI.getStatusManager().trigger(getPath());
+            }
+        });
+    }
+    public TBAction(OpenTBUI openTBUI, String name, View.OnClickListener onClickListener) {
+        this(openTBUI, name, null, onClickListener);
+    }
+    public TBAction(OpenTBUI openTBUI, String name, String path) {
+        this(openTBUI, name, path, null);
     }
     public TBAction(OpenTBUI openTBUI, String name) {
-        this(openTBUI, name, null);
+        this(openTBUI, name, null, null);
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
-        view.setOnClickListener(listener);
+        this.listener = listener;
     }
 }

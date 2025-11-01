@@ -21,8 +21,8 @@ public class TBBlockList extends TBWidget{
     OnSelectedItemChangeListener onSelectedItemChangeListener;
     Map<String, CircleSwitch> circleSwitches = new HashMap<>();
 
-    public TBBlockList(OpenTBUI openTBUI, OnSelectedItemChangeListener listener) {
-        super(openTBUI, "");
+    public TBBlockList(OpenTBUI openTBUI, String path, OnSelectedItemChangeListener listener) {
+        super(openTBUI, "", path);
         onSelectedItemChangeListener = listener;
         view = (FlexboxLayout) LinearLayout.inflate(context, R.layout.list_block_list, null);
         view.setLayoutParams(new LinearLayout.LayoutParams(
@@ -30,8 +30,14 @@ public class TBBlockList extends TBWidget{
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
     }
+    public TBBlockList(OpenTBUI openTBUI, String path) {
+        this(openTBUI, path, null);
+    }
+    public TBBlockList(OpenTBUI openTBUI, OnSelectedItemChangeListener listener) {
+        this(openTBUI, null, listener);
+    }
     public TBBlockList(OpenTBUI openTBUI) {
-        this(openTBUI, null);
+        this(openTBUI, null, null);
     }
 
     public TBBlockList addItem(String id, Bitmap[] textures){
@@ -82,5 +88,19 @@ public class TBBlockList extends TBWidget{
     }
     public CircleSwitch[] getCircleSwitches(){
         return circleSwitches.values().toArray(new CircleSwitch[0]);
+    }
+    public TBBlockList setItemSelectedWithoutNotify(String id, boolean isSelected){
+        CircleSwitch circleSwitch = getCircleSwitch(id);
+        if (circleSwitch != null) {
+            circleSwitch.setOn(isSelected);
+        }
+        return this;
+    }
+    public TBBlockList setItemSelected(String id, boolean isSelected){
+        setItemSelectedWithoutNotify(id, isSelected);
+        if (onSelectedItemChangeListener != null) {
+            onSelectedItemChangeListener.onSelectedItemChange(new String[]{id});
+        }
+        return this;
     }
 }

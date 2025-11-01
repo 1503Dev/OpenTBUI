@@ -1,5 +1,7 @@
 package dev1503.opentbui;
 
+import static dev1503.opentbui.Utils.dp2px;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,14 +12,17 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.CollapsibleActionView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -59,23 +64,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        CircleSwitch circleSwitch = findViewById(R.id.circleSwitch);
-        circleSwitch.setOnColor(Color.parseColor("#2000E676"));
-        circleSwitch.setSwitchListener(isOn -> {
-            Toast.makeText(this, "开关状态: " + isOn, Toast.LENGTH_SHORT).show();
-        });
-        TextView textView = new TextView(this);
-        textView.setText("AB");
-        circleSwitch.setContentView(textView);
-        Cube3DView cube = findViewById(R.id.cube);
-        cube.setTextures(new Bitmap[]{
-                drawableToBitmap(getDrawable(R.drawable.crafting_table_top)),
-                drawableToBitmap(getDrawable(R.drawable.crafting_table_front)),
-                drawableToBitmap(getDrawable(R.drawable.crafting_table_side))
-        });
+        TextView logs = findViewById(R.id.logs);
 
 
         tbUI = OpenTBUI.fromPopup(this);
+
+        tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+
         Category categoryMovement = tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp);
         categoryMovement.addToggle("飞行");
         categoryMovement.addToggle("穿透飞行");
@@ -196,37 +191,34 @@ public class MainActivity extends AppCompatActivity {
         toggleHitbox.addRangeSlider("玩家击中范围", 1, 8);
         categoryCombat.addToggle("自动穿装");
 
-        Category tbuiCategory = tbUI.addCategory("OpenTBUI", R.drawable.ic_arrow_back_black_24dp);
-        TBToggle themeToggle = tbuiCategory.addToggle("主题", true);
-        TBColor color1 = themeToggle.addColor("主要颜色", Color.parseColor("#00E676"), color -> {
-            TBTheme theme = tbUI.getTheme();
-            tbUI.setTheme(new TBTheme(color, theme.getColor2()));
-        });
-        TBColor color2 = themeToggle.addColor("次要颜色", Color.parseColor("#43A047"), color -> {
-            TBTheme theme = tbUI.getTheme();
-            tbUI.setTheme(new TBTheme(theme.getColor1(), color));
-        });
-        themeToggle.addAction("重置", view -> {
-            color1.setColor(Color.parseColor("#00E676"));
-            color2.setColor(Color.parseColor("#43A047"));
-            tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
-        });
-        tbuiCategory.addToggle("Test toggle").setChecked(true).addAction("action");
-        tbuiCategory.addSlider("slider", new float[]{0, 2, 50, 1503});
-        tbuiCategory.addRangeSlider("range slider", -1503, 1503);
-        tbuiCategory.addRangeSlider("Premium", 0, 15031503, (slider, v)->{
-            tbUI.setPremiumExpireSeconds((long) v);
-        });
-        tbuiCategory.addEditText("EditText", "abc")
-                .setOnTextInputFinishListener((text) -> {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "输入了: " + text, Toast.LENGTH_SHORT).show();
-                    });
-                });
-        tbuiCategory.addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃").addToggle("套娃");
+        Category categorySync = tbUI.addCategory("组件同步", R.drawable.ic_settings_black_24dp);
+        categorySync.addToggle("path/to/a", "path/to/a");
+        categorySync.addToggle("path/to/a", "path/to/a");
+        categorySync.addToggle("", (tBToggle, b) -> {
+            if (!b) {
+                tBToggle.setCheckedWithoutNotify(true);
+            }
+        })
+                .setChecked(true)
+                .addToggle("path/to/a", "path/to/a");
+        categorySync.addSlider("path/to/a", "path/to/a", new float[]{-2f, -1f, 0f, 1f, 2f});
+        categorySync.addSlider("path/to/b", "path/to/b", new float[]{-10f, 0f, 10f});
+        categorySync.addRangeSlider("path/to/b", "path/to/b", -20, 20);
+        categorySync.addColor("path/to/c", "path/to/c");
+        categorySync.addRangeSlider("path/to/c", "path/to/c", -2147483678f, 2147483647);
+        categorySync.addAction("action", "this/is/a/action");
+
+        Category customCategory = tbUI.addCategory("自定义", R.drawable.ic_arrow_back_black_24dp);
+        TBToggle themeToggle = customCategory.addToggle("主题", true);
+        themeToggle.addColor("主要颜色", "theme/color1", Color.parseColor("#00E676"));
+        themeToggle.addColor("次要颜色", "theme/color2", Color.parseColor("#43A047"));
+        themeToggle.addAction("重置", "reset_theme");
+        TBToggle layoutToggle = customCategory.addToggle("布局", true);
+        layoutToggle.addRangeSlider("Categories 宽度", "categories/width", 32, 512).setValueWithoutNotify(186);
+        layoutToggle.addRangeSlider("Features 宽度", "features/width", 144, 512 ).setValueWithoutNotify(240);
 
         Category categoryOss = tbUI.addCategory("开放源代码许可", R.drawable.ic_help_outline_black_24dp);
-        categoryOss.addToggle("OpenTBUI", true).addAction("GPL-3.0 (暂行)");
+        categoryOss.addToggle("OpenTBUI\n" + OpenTBUI.VERSION_NAME, true).addAction("LGPLv3");
         categoryOss.addToggle("IndicatorSeekBar", true).addAction("Apache-2.0");
         categoryOss.addToggle("AppCompat", true).addAction("Apache-2.0");
         categoryOss.addToggle("MaterialComponents", true).addAction("Apache-2.0");
@@ -236,9 +228,48 @@ public class MainActivity extends AppCompatActivity {
 
         tbUI.selectCategory(0);
 
-        tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
-        tbUI.setPremiumExpireSeconds(500L);
+        tbUI.setPremiumExpireSeconds(15031503L);
         tbUI.startUpdatePremiumExpireTimeTextTimer();
+        tbUI.refreshTheme();
+        final StatusManager sm = tbUI.getStatusManager();
+
+        sm.setListener(new StatusManager.Listener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onValueChange(String path, double value) {
+                logs.setText("value_change: " + path + ": " + value + "\n" + logs.getText());
+                TBTheme theme;
+                switch (path) {
+                    case "theme/color1":
+                        theme = tbUI.getTheme();
+                        tbUI.setTheme(new TBTheme((int) value, theme.getColor2()));
+                        break;
+                    case "theme/color2":
+                        theme = tbUI.getTheme();
+                        tbUI.setTheme(new TBTheme(theme.getColor1(), (int) value));
+                        break;
+                    case "categories/width":
+                        tbUI.setCategoriesViewWidth(dp2px(MainActivity.this, (int) value));
+                        break;
+                    case "features/width":
+                        tbUI.setFeaturesViewWidth(dp2px(MainActivity.this, (int) value));
+                        break;
+                }
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onActionTrigger(String path) {
+                logs.setText("action_trigger: " + path + "\n" + logs.getText());
+                switch (path) {
+                    case "reset_theme":
+                        sm.setValue("theme/color1", Color.parseColor("#00E676"));
+                        sm.setValue("theme/color2", Color.parseColor("#43A047"));
+                        tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+                        break;
+                }
+            }
+        });
 //        tbUI.setFeaturesViewWidth(Utils.dpToPx(this, 320));
 //        tbUI.setCategoriesViewWidth(Utils.dpToPx(this, 160));
     }

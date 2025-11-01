@@ -15,9 +15,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.*;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -1474,6 +1472,7 @@ public class IndicatorSeekBar extends View {
         this.mMax = builder.max;
         this.mMin = builder.min;
         this.mProgress = builder.progress;
+        this.mScale = builder.scale;
         this.mIsFloatProgress = builder.progressValueFloat;
         this.mTicksCount = builder.tickCount;
         this.mSeekSmoothly = builder.seekSmoothly;
@@ -1889,6 +1888,9 @@ public class IndicatorSeekBar extends View {
      */
     public void setDecimalScale(int scale) {
         this.mScale = scale;
+        this.mIsFloatProgress = true;
+        invalidate();
+        updateStayIndicator();
     }
 
     /**

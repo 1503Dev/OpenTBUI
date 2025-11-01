@@ -3,14 +3,15 @@ package com.warkiz.widget;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.*;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.github.warkiz.widget.indicatorseekbar.R;
 
@@ -166,10 +167,14 @@ public class Indicator {
 
     private int getWindowWidth() {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        if (wm != null) {
+        if (wm == null) {
+            return 0;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return wm.getCurrentWindowMetrics().getBounds().width();
+        } else {
             return wm.getDefaultDisplay().getWidth();
         }
-        return 0;
     }
 
     private int getIndicatorScreenX() {

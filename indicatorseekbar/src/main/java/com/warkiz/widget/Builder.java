@@ -6,11 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.ArrayRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.*;
 import android.view.View;
 
 /**
@@ -34,6 +30,7 @@ public class Builder {
     float min = 0;
     float progress = 0;
     boolean progressValueFloat = false;
+    int scale = 0;
     boolean seekSmoothly = false;
     boolean r2l = false;
     boolean userSeekable = true;
@@ -474,6 +471,12 @@ public class Builder {
     //</selector>
     public Builder tickTextsColorStateList(@NonNull ColorStateList tickTextsColorStateList) {
         this.tickTextsColorStateList = tickTextsColorStateList;
+        return this;
+    }
+
+    public Builder setDecimalScale(int scale) {
+        this.scale = scale;
+        this.progressValueFloat = true;
         return this;
     }
 

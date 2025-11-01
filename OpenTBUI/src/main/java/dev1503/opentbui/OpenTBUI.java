@@ -49,6 +49,7 @@ public class OpenTBUI {
 
     protected Activity activity;
     protected Context context;
+    protected StatusManager statusManager;
 
     PopupWindow popupWindow;
     WindowManager windowManager;
@@ -79,11 +80,12 @@ public class OpenTBUI {
 
     List<TextView> categoryTextViews = new ArrayList<>();
 
-    public OpenTBUI(Activity activity, int windowType, View rootView) {
+    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.windowType = windowType;
         this.rootView = rootView;
+        this.statusManager = statusManager;
 
         contentView = LinearLayout.inflate(activity, R.layout.toolbox_overlay, null);
         categoriesView = contentView.findViewById(R.id.categories);
@@ -153,15 +155,27 @@ public class OpenTBUI {
         remainingTimeTextTemp = context.getString(R.string.premium_expire_text);
         updatePremiumExpireTime();
     }
+    public OpenTBUI(Activity activity, int windowType, View rootView) {
+        this(activity, new StatusManager(), windowType, rootView);
+    }
 
+    public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager, View rootView) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_POPUP, rootView);
+    }
     public static OpenTBUI fromPopup(Activity activity, View rootView) {
         return new OpenTBUI(activity, WINDOW_TYPE_POPUP, rootView);
     }
 
+    public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager) {
+        return fromPopup(activity, statusManager, activity.getWindow().getDecorView());
+    }
     public static OpenTBUI fromPopup(Activity activity) {
         return fromPopup(activity, activity.getWindow().getDecorView());
     }
 
+    public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_GLOBAL, null);
+    }
     public static OpenTBUI fromGlobal(Activity activity) {
         return new OpenTBUI(activity, WINDOW_TYPE_GLOBAL, null);
     }
@@ -362,5 +376,8 @@ public class OpenTBUI {
         layoutParams.width = width;
         categoriesView.setLayoutParams(layoutParams);
         return this;
+    }
+    public StatusManager getStatusManager(){
+        return statusManager;
     }
 }

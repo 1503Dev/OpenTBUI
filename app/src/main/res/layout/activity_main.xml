@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="OpenTBUI"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,81 +19,22 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1111"
-        tools:ignore="MissingConstraints" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="start"
         android:onClick="start"
         tools:ignore="MissingConstraints" />
-    <dev1503.opentbui.view.CircleSwitch
-        android:layout_width="wrap_content"
-        android:id="@+id/circleSwitch"
-        android:layout_height="wrap_content"/>
-    <dev1503.opentbui.view.Cube3DView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="#20009688"
-        android:id="@+id/cube"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="https://github.com/1503Dev/OpenTBUI"
         android:onClick="gh"
         tools:ignore="MissingConstraints" />
-    <com.google.android.flexbox.FlexboxLayout
-        android:layout_width="256dp"
-        android:background="#20000000"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        app:flexDirection="row"
-        app:alignItems="stretch"
-        app:justifyContent="flex_start"
-        tools:ignore="MissingClass">
-
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <dev1503.opentbui.view.CircleSwitch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.flexbox.FlexboxLayout>
+        android:id="@+id/logs"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>

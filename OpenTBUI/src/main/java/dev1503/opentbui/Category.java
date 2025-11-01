@@ -44,39 +44,63 @@ public class Category {
         ));
     }
 
-    public Category addWidget(TBWidget widget) {
+    public Category addWidget(TBWidget widget, String path) {
+        widget.setPath(path);
         widgets.add(widget);
 //        if (featuresAdapter != null) {
 //            featuresAdapter.addFeature(widget);
 //        }
         viewContainer.addView(widget.getView());
+        if (openTBUI.getStatusManager() != null) {
+            openTBUI.getStatusManager().addWidget(widget);
+        }
         return this;
     }
 
-    public TBToggle addToggle(String name, SwitchCompat.OnCheckedChangeListener onCheckedChangeListener) {
+    public Category addWidget(TBWidget widget) {
+        return addWidget(widget, null);
+    }
+
+    public TBToggle addToggle(String name, String path, TBToggle.OnCheckedChangeListener onCheckedChangeListener) {
         TBToggle toggle = new TBToggle(openTBUI, name, onCheckedChangeListener);
-        addWidget(toggle);
+        addWidget(toggle, path);
+        return toggle;
+    }
+
+    public TBToggle addToggle(String name, TBToggle.OnCheckedChangeListener onCheckedChangeListener) {
+        return addToggle(name, null, onCheckedChangeListener);
+    }
+    public TBToggle addToggle(String name, String path) {
+        TBToggle toggle = new TBToggle(openTBUI, name);
+        addWidget(toggle, path);
         return toggle;
     }
     public TBToggle addToggle(String name) {
-        TBToggle toggle = new TBToggle(openTBUI, name);
-        addWidget(toggle);
+        return addToggle(name, (String) null);
+    }
+    public TBToggle addToggle(String name, String path, boolean isChecked) {
+        TBToggle toggle = new TBToggle(openTBUI, name, isChecked);
+        addWidget(toggle, path);
         return toggle;
     }
     public TBToggle addToggle(String name, boolean isChecked) {
-        TBToggle toggle = new TBToggle(openTBUI, name, isChecked);
-        addWidget(toggle);
-        return toggle;
+        return addToggle(name, null, isChecked);
+    }
+    public TBAction addAction(String name, String path, View.OnClickListener onClickListener) {
+        TBAction action = new TBAction(openTBUI, name, onClickListener);
+        addWidget(action, path);
+        return action;
     }
     public TBAction addAction(String name, View.OnClickListener onClickListener) {
-        TBAction action = new TBAction(openTBUI, name, onClickListener);
-        addWidget(action);
+        return addAction(name, null, onClickListener);
+    }
+    public TBAction addAction(String name, String path) {
+        TBAction action = new TBAction(openTBUI, name);
+        addWidget(action, path);
         return action;
     }
     public TBAction addAction(String name) {
-        TBAction action = new TBAction(openTBUI, name);
-        addWidget(action);
-        return action;
+        return addAction(name, (String) null);
     }
     public TBWidget[] getAllWidgets() {
         return widgets.toArray(new TBWidget[0]);
@@ -95,74 +119,111 @@ public class Category {
     public LinearLayout getViewContainer() {
         return viewContainer;
     }
-    public TBSlider addSlider(String name) {
+    public TBSlider addSlider(String name, String path) {
         TBSlider slider = new TBSlider(openTBUI, name);
-        addWidget(slider);
+        addWidget(slider, path);
+        return slider;
+    }
+    public TBSlider addSlider(String name) {
+        return addSlider(name, (String) null);
+    }
+    public TBSlider addSlider(String name, String path, float[] values, TBSlider.OnValueChangeListener onValueChangeListener) {
+        TBSlider slider = new TBSlider(openTBUI, name, values, onValueChangeListener);
+        addWidget(slider, path);
         return slider;
     }
     public TBSlider addSlider(String name, float[] values, TBSlider.OnValueChangeListener onValueChangeListener) {
-        TBSlider slider = new TBSlider(openTBUI, name, values, onValueChangeListener);
-        addWidget(slider);
+        return addSlider(name, null, values, onValueChangeListener);
+    }
+    public TBSlider addSlider(String name, String path, float[] values) {
+        TBSlider slider = new TBSlider(openTBUI, name, values);
+        addWidget(slider, path);
         return slider;
     }
     public TBSlider addSlider(String name, float[] values) {
-        TBSlider slider = new TBSlider(openTBUI, name, values);
-        addWidget(slider);
-        return slider;
+        return addSlider(name, null, values);
+    }
+    public TBRangeSlider addRangeSlider(String name, String path, float min, float max) {
+        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, path, min, max);
+        addWidget(rangeSlider, path);
+        return rangeSlider;
     }
     public TBRangeSlider addRangeSlider(String name, float min, float max) {
-        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, min, max);
-        addWidget(rangeSlider);
+        return addRangeSlider(name, null, min, max);
+    }
+    public TBRangeSlider addRangeSlider(String name, String path, float min, float max, TBRangeSlider.OnValueChangeListener onValueChangeListener) {
+        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, min, max, onValueChangeListener);
+        addWidget(rangeSlider, path);
         return rangeSlider;
     }
     public TBRangeSlider addRangeSlider(String name, float min, float max, TBRangeSlider.OnValueChangeListener onValueChangeListener) {
-        TBRangeSlider rangeSlider = new TBRangeSlider(openTBUI, name, min, max, onValueChangeListener);
-        addWidget(rangeSlider);
-        return rangeSlider;
+        return addRangeSlider(name, null, min, max, onValueChangeListener);
+    }
+    public TBColor addColor(String name, String path) {
+        TBColor tbColor = new TBColor(openTBUI, name);
+        addWidget(tbColor, path);
+        return tbColor;
     }
     public TBColor addColor(String name) {
-        TBColor tbColor = new TBColor(openTBUI, name);
-        addWidget(tbColor);
+        return addColor(name, (String) null);
+    }
+    public TBColor addColor(String name, String path, int defaultColor) {
+        TBColor tbColor = new TBColor(openTBUI, name, defaultColor);
+        addWidget(tbColor, path);
         return tbColor;
     }
     public TBColor addColor(String name, int defaultColor) {
-        TBColor tbColor = new TBColor(openTBUI, name, defaultColor);
-        addWidget(tbColor);
+        return addColor(name, null, defaultColor);
+    }
+    public TBColor addColor(String name, String path, int defaultColor, ColorPicker.OnColorPickListener onColorPickListener) {
+        TBColor tbColor = new TBColor(openTBUI, name, path, defaultColor, onColorPickListener);
+        addWidget(tbColor, path);
         return tbColor;
     }
     public TBColor addColor(String name, int defaultColor, ColorPicker.OnColorPickListener onColorPickListener) {
-        TBColor tbColor = new TBColor(openTBUI, name, defaultColor, onColorPickListener);
-        addWidget(tbColor);
-        return tbColor;
+        return addColor(name, null, defaultColor, onColorPickListener);
     }
     public TBEditText addEditText() {
-        TBEditText tbEditText = new TBEditText(openTBUI);
-        addWidget(tbEditText);
+        return addEditText((String) null);
+    }
+    public TBEditText addEditTextWithPath(String name, String path) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name);
+        addWidget(tbEditText, path);
         return tbEditText;
     }
     public TBEditText addEditText(String name) {
-        TBEditText tbEditText = new TBEditText(openTBUI, name);
-        addWidget(tbEditText);
+        return addEditText(name, (String) null);
+    }
+    public TBEditText addEditText(String name, String path, String defaultText) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText);
+        addWidget(tbEditText, path);
         return tbEditText;
     }
     public TBEditText addEditText(String name, String defaultText) {
-        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText);
-        addWidget(tbEditText);
+        return addEditText(name, null, defaultText);
+    }
+    public TBEditText addEditText(String name, String path, String defaultText, TBEditText.OnTextInputFinishListener onTextChangeListener) {
+        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
+        addWidget(tbEditText, path);
         return tbEditText;
     }
     public TBEditText addEditText(String name, String defaultText, TBEditText.OnTextInputFinishListener onTextChangeListener) {
-        TBEditText tbEditText = new TBEditText(openTBUI, name, defaultText, onTextChangeListener);
-        addWidget(tbEditText);
-        return tbEditText;
+        return addEditText(name, null, defaultText, onTextChangeListener);
+    }
+    public TBBlockList addBlockList(String path) {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI);
+        addWidget(tbBlockList, path);
+        return tbBlockList;
     }
     public TBBlockList addBlockList() {
-        TBBlockList tbBlockList = new TBBlockList(openTBUI);
-        addWidget(tbBlockList);
+        return addBlockList((String) null);
+    }
+    public TBBlockList addBlockList(String path, TBBlockList.OnSelectedItemChangeListener listener) {
+        TBBlockList tbBlockList = new TBBlockList(openTBUI, listener);
+        addWidget(tbBlockList, path);
         return tbBlockList;
     }
     public TBBlockList addBlockList(TBBlockList.OnSelectedItemChangeListener listener) {
-        TBBlockList tbBlockList = new TBBlockList(openTBUI, listener);
-        addWidget(tbBlockList);
-        return tbBlockList;
+        return addBlockList(null, listener);
     }
 }

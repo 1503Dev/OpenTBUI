@@ -31,9 +31,10 @@ public class TBSlider extends TBWidget{
     private float[] values = {};
 
     OnValueChangeListener onValueChangeListener;
+    boolean isSlideByUser = true;
 
-    public TBSlider(OpenTBUI openTBUI, String name, OnValueChangeListener seekChangeListener, float[] values) {
-        super(openTBUI, name);
+    public TBSlider(OpenTBUI openTBUI, String name, String path, OnValueChangeListener seekChangeListener, float[] values) {
+        super(openTBUI, name, path);
         context = openTBUI.getContext();
         view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_slider, null);
         view.setLayoutParams(new LinearLayout.LayoutParams(
@@ -52,6 +53,9 @@ public class TBSlider extends TBWidget{
                     if (onValueChangeListener != null) {
                         onValueChangeListener.onValueChange(self, self.values[(int)seekBar.getProgress()], (int)seekBar.getProgress());
                     }
+                    if (openTBUI.getStatusManager() != null && isSlideByUser) {
+                        openTBUI.getStatusManager().setValue(self, getPath(), self.values[(int)seekBar.getProgress()]);
+                    }
                 }
             }
 
@@ -66,17 +70,23 @@ public class TBSlider extends TBWidget{
             }
         });
     }
+    public TBSlider(OpenTBUI openTBUI, String name, String path) {
+        this(openTBUI, name, path, null, new float[0]);
+    }
     public TBSlider(OpenTBUI openTBUI, String name) {
-        this(openTBUI, name, null, new float[0]);
+        this(openTBUI, name, null, null, new float[0]);
+    }
+    public TBSlider(OpenTBUI openTBUI, String name, String path, float[] values) {
+        this(openTBUI, name, path, null, values);
     }
     public TBSlider(OpenTBUI openTBUI, String name, float[] values) {
         this(openTBUI, name, null, values);
     }
     public TBSlider(OpenTBUI openTBUI, String name, OnValueChangeListener seekChangeListener) {
-        this(openTBUI, name, seekChangeListener, new float[0]);
+        this(openTBUI, name, null, seekChangeListener, new float[0]);
     }
     public TBSlider(OpenTBUI openTBUI, String name, float[] values, OnValueChangeListener seekChangeListener) {
-        this(openTBUI, name, seekChangeListener, values);
+        this(openTBUI, name, null, seekChangeListener, values);
     }
 
     public TBSlider setOnValueChangeListener(OnValueChangeListener seekChangeListener) {
@@ -121,6 +131,18 @@ public class TBSlider extends TBWidget{
         }
         if (list.contains(value)) {
             seekBar.setProgress(list.indexOf(value));
+        }
+        return this;
+    }
+    public TBSlider setValueWithoutNotify(float value) {
+        List<Float> list = new ArrayList<>();
+        for (float v : values) {
+            list.add(v);
+        }
+        if (list.contains(value)) {
+            isSlideByUser = false;
+            seekBar.setProgress(list.indexOf(value));
+            isSlideByUser = true;
         }
         return this;
     }

@@ -1,7 +1,7 @@
 package com.warkiz.widget;
 
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.*;
 
 /**
  * for collecting each section track color
