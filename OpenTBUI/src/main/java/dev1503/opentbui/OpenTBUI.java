@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +47,7 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
-    public static final String VERSION_NAME = "v202510121151.3";
+    public static final String VERSION_NAME = "v202511081212.4";
 
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
@@ -73,17 +75,11 @@ public class OpenTBUI {
     TextView remainingTimeText;
     LinearLayout extraButtonsLayout;
 
-    String minuteUnitText = "min";
-    String secondUnitText = "sec";
-    String remainingTimeTextTemp = "%s";
-
     Runnable onHideListener;
     TBTheme theme;
 
-    long premiumExpireTime = 0;
-    int premiumExpireTimeUpdateTimer = 0;
-
     List<TextView> categoryTextViews = new ArrayList<>();
+    int tipBarIconSize = 0;
 
     public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, ViewGroup overlayLayout) {
         this.activity = activity;
@@ -91,6 +87,8 @@ public class OpenTBUI {
         this.windowType = windowType;
         this.rootView = rootView;
         this.statusManager = statusManager;
+
+        tipBarIconSize = dp2px(context, 16);
 
         contentView = overlayLayout;
         categoriesView = contentView.findViewById(R.id.categories);
@@ -156,10 +154,8 @@ public class OpenTBUI {
         });
         remainingTimeText = contentView.findViewById(R.id.remaining_time_text);
         extraButtonsLayout = contentView.findViewById(R.id.extraBottonsLayout);
-        minuteUnitText = context.getString(R.string.text_short_minutes);
-        secondUnitText = context.getString(R.string.text_short_seconds);
-        remainingTimeTextTemp = context.getString(R.string.premium_expire_text);
-        updatePremiumExpireTime();
+        remainingTimeText.setText("Powered by 1503Dev/OpenTBUI " + VERSION_NAME);
+
     }
     public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, int overlayLayoutResId) {
         this(activity, statusManager, windowType, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
@@ -200,7 +196,26 @@ public class OpenTBUI {
     public static OpenTBUI fromGlobal(Activity activity) {
         return new OpenTBUI(activity, WINDOW_TYPE_GLOBAL, null);
     }
+    public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager, View rootView) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_GLOBAL, rootView);
+    }
+    public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager, int overlayLayoutResId) {
+        return fromGlobal(activity, statusManager, activity.getWindow().getDecorView(), overlayLayoutResId);
+    }
+    public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager, View rootView, int overlayLayoutResId) {
+        return fromGlobal(activity, statusManager, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
+    }
+    public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager, View rootView, ViewGroup overlayLayout) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_GLOBAL, rootView, overlayLayout);
+    }
     public void show() {
+        if (isFirstShow) {
+            isFirstShow = false;
+            if (!categories.isEmpty()) {
+                selectCategory(0);
+            }
+            refreshTheme();
+        }
         contentView.setVisibility(View.VISIBLE);
         if (windowType == WINDOW_TYPE_POPUP) {
 //            hideSystemUI();
@@ -211,13 +226,6 @@ public class OpenTBUI {
             if (!isShown) {
                 windowManager.addView(contentView, params);
                 isShown = true;
-            }
-        }
-        if (isFirstShow) {
-            isFirstShow = false;
-            if (!categories.isEmpty()) {
-                featuresView.removeAllViews();
-                featuresView.addView(categories.get(0).getViewContainer());
             }
         }
     }
@@ -332,44 +340,6 @@ public class OpenTBUI {
         }
         return this;
     }
-    public void setPremiumExpireSeconds(long seconds) {
-        premiumExpireTime = seconds;
-        updatePremiumExpireTime();
-    }
-    public void updatePremiumExpireTime() {
-        if (premiumExpireTime > 0) {
-            remainingTimeText.setVisibility(View.VISIBLE);
-            remainingTimeText.setText(String.format(remainingTimeTextTemp, getPremiumExpireTimeText()));
-        } else {
-            remainingTimeText.setText("");
-            remainingTimeText.setVisibility(View.GONE);
-        }
-    }
-
-    public void startUpdatePremiumExpireTimeTextTimer() {
-        premiumExpireTimeUpdateTimer++;
-        new Handler().postDelayed(() -> {
-            if (premiumExpireTimeUpdateTimer >= 1) {
-                premiumExpireTime--;
-                premiumExpireTimeUpdateTimer = 0;
-            }
-            activity.runOnUiThread(this::updatePremiumExpireTime);
-            startUpdatePremiumExpireTimeTextTimer();
-        }, 1000);
-    }
-
-    String getPremiumExpireTimeText() {
-        if (premiumExpireTime >= 60) {
-            String minutes = ((int)(premiumExpireTime / 60)) + "";
-            String seconds = ((int)(premiumExpireTime % 60)) + "";
-            return String.format(Locale.getDefault(), "%s%s %s%s",
-                    minutes, minuteUnitText,
-                    seconds, secondUnitText);
-        } else {
-            return String.format(Locale.getDefault(), "%d%s",
-                    premiumExpireTime, secondUnitText);
-        }
-    }
 
     public Context getContext() {
         return this.context;
@@ -421,5 +391,60 @@ public class OpenTBUI {
         imageView.setOnClickListener(onClickListener);
         extraButtonsLayout.addView(imageView);
         return imageView;
+    }
+
+    public TipBar getTipBar() {
+        return new TipBar();
+    }
+
+    public class TipBar {
+        public TipBar setText(CharSequence text) {
+            remainingTimeText.setText(text);
+            return this;
+        }
+        public TipBar show() {
+            remainingTimeText.setVisibility(View.VISIBLE);
+            return this;
+        }
+        public TipBar hide() {
+            remainingTimeText.setVisibility(View.GONE);
+            return this;
+        }
+        public TipBar setIcon(int drawableResId) {
+            Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableResId, null);
+            if (drawable != null) {
+                drawable.setBounds(0, 0, tipBarIconSize, tipBarIconSize);
+            }
+            remainingTimeText.setCompoundDrawablesRelative(null, null, drawable, null);
+            return this;
+        }
+        public TipBar setIconSize(int size) {
+            tipBarIconSize = size;
+            Drawable drawable = remainingTimeText.getCompoundDrawablesRelative()[2];
+            if (drawable != null) {
+                drawable.setBounds(0, 0, size, size);
+            }
+            remainingTimeText.setCompoundDrawablesRelative(null, null, drawable, null);
+            return this;
+        }
+        public TipBar setIconSizeDp(int sizeDp) {
+            setIconSize(dp2px(context, sizeDp));
+            return this;
+        }
+        public TipBar removeIcon() {
+            remainingTimeText.setCompoundDrawablesRelative(null, null, null, null);
+            return this;
+        }
+        public TipBar setIconPadding(int padding) {
+            remainingTimeText.setCompoundDrawablePadding(padding);
+            return this;
+        }
+        public TextView getTextView() {
+            return remainingTimeText;
+        }
+        public TipBar setOnClickListener(View.OnClickListener onClickListener) {
+            remainingTimeText.setOnClickListener(onClickListener);
+            return this;
+        }
     }
 }

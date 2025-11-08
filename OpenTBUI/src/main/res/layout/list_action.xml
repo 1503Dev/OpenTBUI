@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:tag="layout/list_action_0"
     android:background="?attr/selectableItemBackground"
@@ -22,5 +23,7 @@
         android:src="@drawable/ic_arrow_forward_black_24dp"
         android:paddingStart="16dp"
         android:paddingEnd="28dp"
-        app:tint="#FFFFFFFF"/>
+        android:tint="#FFFFFF"
+        app:tint="#FFFFFF"
+        tools:ignore="UseAppTint" />
 </LinearLayout>

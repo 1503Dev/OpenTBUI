@@ -20,6 +20,7 @@
             android:layout_height="52dp"
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:contentDescription="@string/action_back"
+            android:tint="#FFFFFF"
             app:tint="#FFFFFF"/>
         <View
             android:layout_width="0dp"

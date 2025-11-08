@@ -25,6 +25,9 @@ project("opentbui")
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
+
+find_library(glesv2-lib GLESv2)
+find_library(egl-lib EGL)
 add_library(test SHARED
     # List C/C++ source files with relative paths to this CMakeLists.txt.
     opentbui.cpp)
@@ -35,4 +38,5 @@ add_library(test SHARED
 target_link_libraries(test
     # List libraries link to the target library
     android
-    log)
+    log
+        ${glesv2-lib} ${egl-lib})

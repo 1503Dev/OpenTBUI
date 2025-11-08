@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     TextView logs;
     OpenTBUI tbUI1;
     OpenTBUI tbUI2;
+    OpenTBUI tbUI3;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -75,7 +76,24 @@ public class MainActivity extends AppCompatActivity {
 
         tbUI2 = OpenTBUI.fromPopup(this, statusManager, R.layout.my_overlay);
         tbUI2.setTheme(new TBTheme(Color.parseColor("#8C9EFF"), Color.parseColor("#3F51B5")));
+        final boolean[] hasIcon = {true};
+        tbUI2.getTipBar().setText("This is a tip with icon(clickable)").setIcon(R.drawable.small_colored_add_icon).setOnClickListener((view -> {
+            if (hasIcon[0]) {
+                tbUI2.getTipBar().removeIcon().setText("This is a tip(clickable)");
+                hasIcon[0] = false;
+            } else {
+                tbUI2.getTipBar().setIcon(R.drawable.small_colored_add_icon).setText("This is a tip with icon(clickable)");
+                hasIcon[0] = true;
+            }
+        }));
         initTBUI(tbUI2);
+
+        tbUI3 = OpenTBUI.fromGlobal(this, statusManager, R.layout.my_overlay);
+        tbUI3.setCategoriesViewWidth(dp2px(this, 100));
+        tbUI3.setFeaturesViewWidth(dp2px(this, 200));
+        tbUI3.getTipBar().hide();
+        tbUI3.setTheme(new TBTheme(Color.parseColor("#FFA726"), Color.parseColor("#F57C00")));
+        initTBUI(tbUI3);
 
     }
 
@@ -89,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
     }
     public void start2(View view) {
         tbUI2.show();
+    }
+    public void start3(View view) {
+        tbUI3.show();
+    }
+
+    public void toNativeActivity(View view) {
+        Intent intent = new Intent(this, TestNativeActivity.class);
+        startActivity(intent);
     }
 
     public void gh(View view) {
@@ -276,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
         categoryOss.addToggle("FlexBoxLayout", true).addAction("Apache-2.0");
         categoryOss.addToggle("Material Design Icons", true).addAction("Apache-2.0");
 
-        tbUI.selectCategory(0);
         tbUI.addExtraButton(R.drawable.ic_launcher_foreground, (v) -> {
             Toast.makeText(this, "Extra Button 1 Clicked", Toast.LENGTH_SHORT).show();
         });
@@ -296,11 +321,6 @@ public class MainActivity extends AppCompatActivity {
             tbUI.selectCategory(1);
         });
 
-
-
-        tbUI.setPremiumExpireSeconds(15031503L);
-        tbUI.startUpdatePremiumExpireTimeTextTimer();
-        tbUI.refreshTheme();
         final StatusManager sm = tbUI.getStatusManager();
 
         sm.setListener(new StatusManager.Listener() {
@@ -311,18 +331,18 @@ public class MainActivity extends AppCompatActivity {
                 TBTheme theme;
                 switch (path) {
                     case "theme/color1":
-                        theme = tbUI.getTheme();
-                        tbUI.setTheme(new TBTheme((int) value, theme.getColor2()));
+                        theme = tbUI1.getTheme();
+                        tbUI1.setTheme(new TBTheme((int) value, theme.getColor2()));
                         break;
                     case "theme/color2":
-                        theme = tbUI.getTheme();
-                        tbUI.setTheme(new TBTheme(theme.getColor1(), (int) value));
+                        theme = tbUI1.getTheme();
+                        tbUI1.setTheme(new TBTheme(theme.getColor1(), (int) value));
                         break;
                     case "categories/width":
-                        tbUI.setCategoriesViewWidth(dp2px(MainActivity.this, (int) value));
+                        tbUI1.setCategoriesViewWidth(dp2px(MainActivity.this, (int) value));
                         break;
                     case "features/width":
-                        tbUI.setFeaturesViewWidth(dp2px(MainActivity.this, (int) value));
+                        tbUI1.setFeaturesViewWidth(dp2px(MainActivity.this, (int) value));
                         break;
                 }
             }

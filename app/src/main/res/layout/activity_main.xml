@@ -16,24 +16,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <Button
+    <com.google.android.flexbox.FlexboxLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="default layout"
-        android:onClick="start1"
-        tools:ignore="MissingConstraints" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="custom layout"
-        android:onClick="start2"
-        tools:ignore="MissingConstraints" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="https://github.com/1503Dev/OpenTBUI"
-        android:onClick="gh"
-        tools:ignore="MissingConstraints" />
+        app:flexWrap="wrap"
+        app:flexDirection="row"
+        app:alignItems="stretch"
+        app:justifyContent="flex_start"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="default layout"
+            android:onClick="start1"
+            tools:ignore="MissingConstraints" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="custom layout"
+            android:onClick="start2"
+            tools:ignore="MissingConstraints" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="custom layout from global"
+            android:onClick="start3"
+            tools:ignore="MissingConstraints" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test native activity"
+            android:onClick="toNativeActivity"
+            tools:ignore="MissingConstraints" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="https://github.com/1503Dev/OpenTBUI"
+            android:onClick="gh"
+            tools:ignore="MissingConstraints" />
+    </com.google.android.flexbox.FlexboxLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
