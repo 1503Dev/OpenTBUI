@@ -1,5 +1,7 @@
 package dev1503.opentbui;
 
+import static dev1503.opentbui.Utils.dp2px;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Switch;
@@ -63,10 +66,12 @@ public class OpenTBUI {
     boolean isFirstShow = true;
 
     List<Category> categories = new ArrayList<>();
+
     RecyclerView categoriesView;
     CategoriesAdapter categoriesAdapter;
     LinearLayout featuresView;
     TextView remainingTimeText;
+    LinearLayout extraButtonsLayout;
 
     String minuteUnitText = "min";
     String secondUnitText = "sec";
@@ -80,14 +85,14 @@ public class OpenTBUI {
 
     List<TextView> categoryTextViews = new ArrayList<>();
 
-    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView) {
+    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, ViewGroup overlayLayout) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.windowType = windowType;
         this.rootView = rootView;
         this.statusManager = statusManager;
 
-        contentView = LinearLayout.inflate(activity, R.layout.toolbox_overlay, null);
+        contentView = overlayLayout;
         categoriesView = contentView.findViewById(R.id.categories);
         categoriesView.setLayoutManager(new LinearLayoutManager(context));
         categoriesAdapter = new CategoriesAdapter(context, categories);
@@ -150,15 +155,28 @@ public class OpenTBUI {
             }
         });
         remainingTimeText = contentView.findViewById(R.id.remaining_time_text);
+        extraButtonsLayout = contentView.findViewById(R.id.extraBottonsLayout);
         minuteUnitText = context.getString(R.string.text_short_minutes);
         secondUnitText = context.getString(R.string.text_short_seconds);
         remainingTimeTextTemp = context.getString(R.string.premium_expire_text);
         updatePremiumExpireTime();
     }
+    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, int overlayLayoutResId) {
+        this(activity, statusManager, windowType, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
+    }
+    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView) {
+        this(activity, statusManager, windowType, rootView, R.layout.toolbox_overlay);
+    }
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this(activity, new StatusManager(), windowType, rootView);
     }
 
+    public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager, View rootView, ViewGroup overlayLayout) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_POPUP, rootView, overlayLayout);
+    }
+    public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager, View rootView, int overlayLayoutResId) {
+        return fromPopup(activity, statusManager, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
+    }
     public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager, View rootView) {
         return new OpenTBUI(activity, statusManager, WINDOW_TYPE_POPUP, rootView);
     }
@@ -166,6 +184,9 @@ public class OpenTBUI {
         return new OpenTBUI(activity, WINDOW_TYPE_POPUP, rootView);
     }
 
+    public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager, int overlayLayoutResId) {
+        return fromPopup(activity, statusManager, activity.getWindow().getDecorView(), overlayLayoutResId);
+    }
     public static OpenTBUI fromPopup(Activity activity, StatusManager statusManager) {
         return fromPopup(activity, statusManager, activity.getWindow().getDecorView());
     }
@@ -379,5 +400,24 @@ public class OpenTBUI {
     }
     public StatusManager getStatusManager(){
         return statusManager;
+    }
+    public OpenTBUI setStatusManager(StatusManager statusManager) {
+        this.statusManager = statusManager;
+        return this;
+    }
+    public ImageView addExtraButton(int drawableResId, View.OnClickListener onClickListener) {
+        ImageView imageView = new ImageView(context);
+        imageView.setImageResource(drawableResId);
+        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(
+                dp2px(context, 48),
+                dp2px(context, 48)
+        );
+        imageView.setLayoutParams(layoutParams);
+        imageView.setBackgroundResource(R.drawable.settings_icon_background);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setImageTintList(ColorStateList.valueOf(0xFFFFFFFF));
+        imageView.setOnClickListener(onClickListener);
+        extraButtonsLayout.addView(imageView);
+        return imageView;
     }
 }

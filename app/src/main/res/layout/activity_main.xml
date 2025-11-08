@@ -19,8 +19,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start"
-        android:onClick="start"
+        android:text="default layout"
+        android:onClick="start1"
+        tools:ignore="MissingConstraints" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="custom layout"
+        android:onClick="start2"
         tools:ignore="MissingConstraints" />
     <Button
         android:layout_width="wrap_content"

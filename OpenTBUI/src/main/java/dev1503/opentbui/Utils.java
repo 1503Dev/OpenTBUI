@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
@@ -14,7 +15,7 @@ import androidx.annotation.ColorInt;
 public class Utils {
     public static int dp2px(Context context, int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
     }
     public static int dp2px(Context context, float dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

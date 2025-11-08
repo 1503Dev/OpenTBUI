@@ -39,7 +39,9 @@ import dev1503.opentbui.widgets.TBToggle;
 
 public class MainActivity extends AppCompatActivity {
 
-    OpenTBUI tbUI;
+    TextView logs;
+    OpenTBUI tbUI1;
+    OpenTBUI tbUI2;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -64,14 +66,60 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        TextView logs = findViewById(R.id.logs);
+        logs = findViewById(R.id.logs);
 
+        StatusManager statusManager = new StatusManager();
+        tbUI1 = OpenTBUI.fromPopup(this, statusManager);
+        tbUI1.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+        initTBUI(tbUI1);
 
-        tbUI = OpenTBUI.fromPopup(this);
+        tbUI2 = OpenTBUI.fromPopup(this, statusManager, R.layout.my_overlay);
+        tbUI2.setTheme(new TBTheme(Color.parseColor("#8C9EFF"), Color.parseColor("#3F51B5")));
+        initTBUI(tbUI2);
 
-        tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
+    }
 
-        Category categoryMovement = tbUI.addCategory("动态", R.drawable.ic_settings_black_24dp);
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    public void start1(View view) {
+        tbUI1.show();
+    }
+    public void start2(View view) {
+        tbUI2.show();
+    }
+
+    public void gh(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/1503Dev/OpenTBUI"));
+        startActivity(intent);
+    }
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+
+        if (width <= 0) width = 1;
+        if (height <= 0) height = 1;
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public Bitmap getBitmapFromRes(int resId) {
+        return drawableToBitmap(getDrawable(resId));
+    }
+    public void initTBUI(OpenTBUI tbUI) {
+        Category categoryMovement = tbUI.addCategory("动态", R.drawable.directions_run_24px);
         categoryMovement.addToggle("飞行");
         categoryMovement.addToggle("穿透飞行");
         categoryMovement.addToggle("穿透");
@@ -93,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         categoryMovement.addToggle("点击传送")
                 .addToggle("服务器模式");
 
-        Category categoryWorld = tbUI.addCategory("世界", R.drawable.ic_discord_black_24dp);
+        Category categoryWorld = tbUI.addCategory("世界", R.drawable.deployed_code_24px);
         categoryWorld.addToggle("空中行者（须手持可放置项目）");
         categoryWorld.addToggle("快速拿取箱子物品");
         categoryWorld.addToggle("范围破坏")
@@ -109,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
         fastBuild.addToggle("锁定方向");
         fastBuild.addToggle("选区模式");
         categoryWorld.addAction("获取项目", v -> {
-                    Toast.makeText(this, "点击了获取项目", Toast.LENGTH_SHORT).show();
-                });
+            Toast.makeText(this, "点击了获取项目", Toast.LENGTH_SHORT).show();
+        });
         categoryWorld.addAction("附魔", v -> {
-                    Toast.makeText(this, "点击了附魔", Toast.LENGTH_SHORT).show();
-                });
+            Toast.makeText(this, "点击了附魔", Toast.LENGTH_SHORT).show();
+        });
         categoryWorld.addToggle("NBT编辑器");
         categoryWorld.addToggle("触及范围")
                 .addRangeSlider("范围", 1f, 256f)
@@ -123,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         categoryWorld.addToggle("覆盖名称")
                 .addEditText("", "Open Toolbox User Interface");
 
-        Category categoryRender = tbUI.addCategory("渲染", R.drawable.ic_help_outline_black_24dp);
+        Category categoryRender = tbUI.addCategory("渲染", R.drawable.photo_camera_24px);
         TBToggle toggleXray = categoryRender.addToggle("透视");
         TBEditText editTextXraySelected = toggleXray.addEditText("现行选中项");;
         TBBlockList blockList = toggleXray.addBlockList()
@@ -160,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
         tracer.addColor("实体颜色");
         tracer.addColor("玩家颜色");
         tracer.addRangeSlider("尺寸", 0.1f, 3.0f)
-                                .setDecimalScale(1);
+                .setDecimalScale(1);
         categoryRender.addToggle("实体轮廓")
-                        .addRangeSlider("尺寸", 1, 8);
+                .addRangeSlider("尺寸", 1, 8);
         categoryRender.addToggle("自由视角");
         categoryRender.addToggle("夜视");
         categoryRender.addToggle("装备耐久值");
@@ -172,13 +220,13 @@ public class MainActivity extends AppCompatActivity {
         tinyMap.addRangeSlider("尺寸", 64, 320).setValue(128);
         tinyMap.addToggle("显示玩家");
         categoryRender.addToggle("截断文字")
-                        .addSlider("长度", new float[]{0, 16, 32, 64, 128, 512});
+                .addSlider("长度", new float[]{0, 16, 32, 64, 128, 512});
         categoryRender.addToggle("放大")
-                        .addRangeSlider("倍数", -100, 100);
+                .addRangeSlider("倍数", -100, 100);
 
-        tbUI.addCategory("命令", R.drawable.ic_arrow_forward_black_24dp)
+        tbUI.addCategory("命令", R.drawable.chat_24px)
                 .addAction("To do ...");
-        Category categoryCombat = tbUI.addCategory("战斗", R.drawable.ic_help_outline_black_24dp);
+        Category categoryCombat = tbUI.addCategory("战斗", R.drawable.swords_24px);
         TBToggle toggleKillaura = categoryCombat.addToggle("范围自动攻击");
         toggleKillaura.addToggle("攻击生物");
         toggleKillaura.addToggle("攻击玩家");
@@ -195,10 +243,10 @@ public class MainActivity extends AppCompatActivity {
         categorySync.addToggle("path/to/a", "path/to/a");
         categorySync.addToggle("path/to/a", "path/to/a");
         categorySync.addToggle("", (tBToggle, b) -> {
-            if (!b) {
-                tBToggle.setCheckedWithoutNotify(true);
-            }
-        })
+                    if (!b) {
+                        tBToggle.setCheckedWithoutNotify(true);
+                    }
+                })
                 .setChecked(true)
                 .addToggle("path/to/a", "path/to/a");
         categorySync.addSlider("path/to/a", "path/to/a", new float[]{-2f, -1f, 0f, 1f, 2f});
@@ -208,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
         categorySync.addRangeSlider("path/to/c", "path/to/c", -2147483678f, 2147483647);
         categorySync.addAction("action", "this/is/a/action");
 
-        Category customCategory = tbUI.addCategory("自定义", R.drawable.ic_arrow_back_black_24dp);
+        Category customCategory = tbUI.addCategory("自定义", R.drawable.inbox_customize_24px);
         TBToggle themeToggle = customCategory.addToggle("主题", true);
         themeToggle.addColor("主要颜色", "theme/color1", Color.parseColor("#00E676"));
         themeToggle.addColor("次要颜色", "theme/color2", Color.parseColor("#43A047"));
@@ -216,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
         TBToggle layoutToggle = customCategory.addToggle("布局", true);
         layoutToggle.addRangeSlider("Categories 宽度", "categories/width", 32, 512).setValueWithoutNotify(186);
         layoutToggle.addRangeSlider("Features 宽度", "features/width", 144, 512 ).setValueWithoutNotify(240);
+        layoutToggle.addAction("重置", "reset_layout");
 
         Category categoryOss = tbUI.addCategory("开放源代码许可", R.drawable.ic_help_outline_black_24dp);
         categoryOss.addToggle("OpenTBUI\n" + OpenTBUI.VERSION_NAME, true).addAction("LGPLv3");
@@ -227,6 +276,26 @@ public class MainActivity extends AppCompatActivity {
         categoryOss.addToggle("FlexBoxLayout", true).addAction("Apache-2.0");
 
         tbUI.selectCategory(0);
+        tbUI.addExtraButton(R.drawable.ic_launcher_foreground, (v) -> {
+            Toast.makeText(this, "Extra Button 1 Clicked", Toast.LENGTH_SHORT).show();
+        });
+        tbUI.addExtraButton(R.drawable.ic_settings_black_24dp, (v) -> {
+            Toast.makeText(this, "Extra Button 2 Clicked", Toast.LENGTH_SHORT).show();
+        });
+        tbUI.addExtraButton(R.drawable.ic_help_outline_black_24dp, (v) -> {
+            Toast.makeText(this, "Extra Button 3 Clicked", Toast.LENGTH_SHORT).show();
+        });
+        tbUI.addExtraButton(R.drawable.ic_arrow_back_black_24dp, (v) -> {
+            Toast.makeText(this, "Extra Button 4 Clicked", Toast.LENGTH_SHORT).show();
+        });
+        tbUI.addExtraButton(R.drawable.directions_run_24px, (v) -> {
+            tbUI.selectCategory(0);
+        });
+        tbUI.addExtraButton(R.drawable.deployed_code_24px, (v) -> {
+            tbUI.selectCategory(1);
+        });
+
+
 
         tbUI.setPremiumExpireSeconds(15031503L);
         tbUI.startUpdatePremiumExpireTimeTextTimer();
@@ -267,47 +336,14 @@ public class MainActivity extends AppCompatActivity {
                         sm.setValue("theme/color2", Color.parseColor("#43A047"));
                         tbUI.setTheme(new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047")));
                         break;
+                    case "reset_layout":
+                        sm.setValue("categories/width", 186);
+                        sm.setValue("features/width", 240);
+                        tbUI.setCategoriesViewWidth(dp2px(MainActivity.this, 186));
+                        tbUI.setFeaturesViewWidth(dp2px(MainActivity.this, 240));
+                        break;
                 }
             }
         });
-//        tbUI.setFeaturesViewWidth(Utils.dpToPx(this, 320));
-//        tbUI.setCategoriesViewWidth(Utils.dpToPx(this, 160));
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    public void start(View view) {
-        tbUI.show();
-    }
-
-    public void gh(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/1503Dev/OpenTBUI"));
-        startActivity(intent);
-    }
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-
-        if (width <= 0) width = 1;
-        if (height <= 0) height = 1;
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-    @SuppressLint("UseCompatLoadingForDrawables")
-    public Bitmap getBitmapFromRes(int resId) {
-        return drawableToBitmap(getDrawable(resId));
     }
 }
