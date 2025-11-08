@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBDropDown;
 import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
@@ -53,6 +54,11 @@ public class StatusManager {
                 TBColor color = (TBColor) widget;
                 if (color.getPath().equals(path) && color.getColor() != (int) value) {
                     color.setColorWithoutNotify((int) value);
+                }
+            } else if (widget instanceof TBDropDown) {
+                TBDropDown dropDown = (TBDropDown) widget;
+                if (dropDown.getPath().equals(path) && dropDown.getPosition() != value) {
+                    dropDown.selectItemWithoutNotify((int) value);
                 }
             }
         }

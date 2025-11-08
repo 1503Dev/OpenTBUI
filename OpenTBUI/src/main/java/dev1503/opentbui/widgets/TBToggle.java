@@ -546,6 +546,33 @@ public class TBToggle extends TBWidget {
         return tbBlockList;
     }
 
+    public TBDropDown addDropDown(String path, String[] items, int defaultPosition, TBDropDown.OnItemSelectedListener listener) {
+        TBDropDown tbDropDown = new TBDropDown(openTBUI, path, items, defaultPosition, listener);
+        addItem(tbDropDown);
+        return tbDropDown;
+    }
+    public TBDropDown addDropDown(String path, String[] items, int defaultPosition) {
+        return addDropDown(path, items, defaultPosition, null);
+    }
+    public TBDropDown addDropDown(String path, String[] items, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(path, items, 0, listener);
+    }
+    public TBDropDown addDropDown(String path, String[] items) {
+        return addDropDown(path, items, 0, null);
+    }
+    public TBDropDown addDropDown(String[] items, int defaultPosition, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(null, items, defaultPosition, listener);
+    }
+    public TBDropDown addDropDown(String[] items, int defaultPosition) {
+        return addDropDown(null, items, defaultPosition, null);
+    }
+    public TBDropDown addDropDown(String[] items, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(null, items, 0, listener);
+    }
+    public TBDropDown addDropDown(String[] items) {
+        return addDropDown(null, items);
+    }
+
     public interface OnCheckedChangeListener {
         void onCheckedChanged(@NonNull TBToggle tbToggle, boolean isChecked);
     }

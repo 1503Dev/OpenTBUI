@@ -14,6 +14,7 @@ import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.widgets.TBAction;
 import dev1503.opentbui.widgets.TBBlockList;
 import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBDropDown;
 import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
@@ -225,5 +226,32 @@ public class Category {
     }
     public TBBlockList addBlockList(TBBlockList.OnSelectedItemChangeListener listener) {
         return addBlockList(null, listener);
+    }
+
+    public TBDropDown addDropDown(String path, String[] items, int defaultPosition, TBDropDown.OnItemSelectedListener listener) {
+        TBDropDown tbDropDown = new TBDropDown(openTBUI, path, items, defaultPosition, listener);
+        addWidget(tbDropDown, path);
+        return tbDropDown;
+    }
+    public TBDropDown addDropDown(String path, String[] items, int defaultPosition) {
+        return addDropDown(path, items, defaultPosition, null);
+    }
+    public TBDropDown addDropDown(String path, String[] items, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(path, items, 0, listener);
+    }
+    public TBDropDown addDropDown(String path, String[] items) {
+        return addDropDown(path, items, 0, null);
+    }
+    public TBDropDown addDropDown(String[] items, int defaultPosition, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(null, items, defaultPosition, listener);
+    }
+    public TBDropDown addDropDown(String[] items, int defaultPosition) {
+        return addDropDown(null, items, defaultPosition, null);
+    }
+    public TBDropDown addDropDown(String[] items, TBDropDown.OnItemSelectedListener listener) {
+        return addDropDown(null, items, 0, listener);
+    }
+    public TBDropDown addDropDown(String[] items) {
+        return addDropDown(null, items);
     }
 }

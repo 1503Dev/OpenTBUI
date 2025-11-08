@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 .addRangeSlider("倍数", -100, 100);
 
         tbUI.addCategory("命令", R.drawable.chat_24px)
-                .addAction("To do ...");
+                .addAction("暂不考虑制作");
         Category categoryCombat = tbUI.addCategory("战斗", R.drawable.swords_24px);
         TBToggle toggleKillaura = categoryCombat.addToggle("范围自动攻击");
         toggleKillaura.addToggle("攻击生物");
@@ -264,6 +264,10 @@ public class MainActivity extends AppCompatActivity {
         toggleHitbox.addRangeSlider("生物击中范围", 1, 8);
         toggleHitbox.addRangeSlider("玩家击中范围", 1, 8);
         categoryCombat.addToggle("自动穿装");
+
+        Category categoryOther = tbUI.addCategory("其他", R.drawable.ic_arrow_drop_down);
+        categoryOther.addDropDown("dropdown", new String[]{"abc", "def", "ghi"});
+        categoryOther.addDropDown("dropdown", new String[]{"a", "b", "c"});
 
         Category categorySync = tbUI.addCategory("组件同步", R.drawable.ic_settings_black_24dp);
         categorySync.addToggle("path/to/a", "path/to/a");
