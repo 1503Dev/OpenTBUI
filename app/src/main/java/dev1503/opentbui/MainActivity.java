@@ -274,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         categoryOss.addToggle("AndroidX", true).addAction("Apache-2.0");
         categoryOss.addToggle("RecyclerView", true).addAction("Apache-2.0");
         categoryOss.addToggle("FlexBoxLayout", true).addAction("Apache-2.0");
+        categoryOss.addToggle("Material Design Icons", true).addAction("Apache-2.0");
 
         tbUI.selectCategory(0);
         tbUI.addExtraButton(R.drawable.ic_launcher_foreground, (v) -> {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_short_minutes">" 分"</string>
+    <string name="text_short_seconds">" 秒"</string>
+    <string name="premium_expire_text">高级功能将在 %s 后到期</string>
+    <string name="action_back">返回</string>
+    <string name="action_done">完成</string>
+    <string name="color_value_blue">蓝</string>
+    <string name="color_value_alpha">透明</string>
+    <string name="color_value_hex">颜色代码</string>
+    <string name="color_value_red">红</string>
+    <string name="color_value_green">绿</string>
+</resources>

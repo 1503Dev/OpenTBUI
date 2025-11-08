@@ -239,9 +239,11 @@ public class OpenTBUI {
     }
     public void selectCategory(Category category) {
         categoriesAdapter.setSelectedCategory(category);
+        onCategoryClick(category);
     }
     public void selectCategory(int pos) {
         categoriesAdapter.setSelectedCategory(pos);
+        onCategoryClick(categories.get(pos));
     }
     void hideSystemUI() {
         View decorView = rootView;

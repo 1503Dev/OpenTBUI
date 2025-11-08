@@ -33,3 +33,6 @@ _不包含 IndicatorSeekBar 的依赖许可_
 <img src=".ext/7d9035601bbc3e2cfb000bb393dd7efa.jpg" width="320"/>
 <img src=".ext/79d011e1559500a8e2bbb6e1f519bfc1.jpg" width="320"/>
 <img src=".ext/0840547544793615f8d860b1bb3ab8cd_720.jpg" width="320"/>
+
+(自定义Overlay和额外按钮)  
+<img src=".ext/0b7490680a13a2866e4d4a34cec5f6e7.jpg" width="320"/>
