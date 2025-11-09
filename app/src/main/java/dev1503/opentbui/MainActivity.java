@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     OpenTBUI tbUI1;
     OpenTBUI tbUI2;
     OpenTBUI tbUI3;
+    OpenTBUI tbUI4;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -95,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
         tbUI3.setTheme(new TBTheme(Color.parseColor("#FFA726"), Color.parseColor("#F57C00")));
         initTBUI(tbUI3);
 
+        tbUI4 = OpenTBUI.fromApplication(this, statusManager);
+        tbUI4.setTheme(new TBTheme(Color.parseColor("#FF5722"), Color.parseColor("#E64A19")));
+        initTBUI(tbUI4);
     }
 
     @Override
@@ -110,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void start3(View view) {
         tbUI3.show();
+    }
+    public void start4(View view) {
+        tbUI4.show();
     }
 
     public void toNativeActivity(View view) {

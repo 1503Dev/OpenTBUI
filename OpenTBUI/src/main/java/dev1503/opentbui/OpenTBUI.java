@@ -47,10 +47,11 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
-    public static final String VERSION_NAME = "v202511081212.4";
+    public static final String VERSION_NAME = "v202511091550.5";
 
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
+    public static final int WINDOW_TYPE_APPLICATION = 2;
 
     protected Activity activity;
     protected Context context;
@@ -128,8 +129,12 @@ public class OpenTBUI {
                     onHideListener.run();
                 }
             });
-        } else if (windowType == WINDOW_TYPE_GLOBAL) {
-            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
+            if (windowType == WINDOW_TYPE_GLOBAL) {
+                windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            } else {
+                windowManager = (WindowManager) activity.getWindowManager();
+            }
             params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -208,6 +213,25 @@ public class OpenTBUI {
     public static OpenTBUI fromGlobal(Activity activity, StatusManager statusManager, View rootView, ViewGroup overlayLayout) {
         return new OpenTBUI(activity, statusManager, WINDOW_TYPE_GLOBAL, rootView, overlayLayout);
     }
+
+    public static OpenTBUI fromApplication(Activity activity, StatusManager statusManager) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_APPLICATION, null);
+    }
+    public static OpenTBUI fromApplication(Activity activity) {
+        return new OpenTBUI(activity, WINDOW_TYPE_APPLICATION, null);
+    }
+    public static OpenTBUI fromApplication(Activity activity, StatusManager statusManager, View rootView) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_APPLICATION, rootView);
+    }
+    public static OpenTBUI fromApplication(Activity activity, StatusManager statusManager, int overlayLayoutResId) {
+        return fromApplication(activity, statusManager, activity.getWindow().getDecorView(), overlayLayoutResId);
+    }
+    public static OpenTBUI fromApplication(Activity activity, StatusManager statusManager, View rootView, int overlayLayoutResId) {
+        return fromApplication(activity, statusManager, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
+    }
+    public static OpenTBUI fromApplication(Activity activity, StatusManager statusManager, View rootView, ViewGroup overlayLayout) {
+        return new OpenTBUI(activity, statusManager, WINDOW_TYPE_APPLICATION, rootView, overlayLayout);
+    }
     public void show() {
         if (isFirstShow) {
             isFirstShow = false;
@@ -222,11 +246,10 @@ public class OpenTBUI {
             if (!isShown) {
                 try {
                     popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
-                } catch (Exception e) {
-                    // **&# there is a exception should be record
+                } catch (Exception ignored) {
                 }
             }
-        } else if (windowType == WINDOW_TYPE_GLOBAL) {
+        } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
             if (!isShown) {
                 windowManager.addView(contentView, params);
                 isShown = true;
@@ -242,7 +265,7 @@ public class OpenTBUI {
         contentView.setVisibility(View.GONE);
         if (windowType == WINDOW_TYPE_POPUP) {
             popupWindow.dismiss();
-        } else if (windowType == WINDOW_TYPE_GLOBAL) {
+        } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
             if (isShown) {
                 windowManager.removeView(contentView);
                 isShown = false;

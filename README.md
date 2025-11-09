@@ -37,3 +37,6 @@ _不包含 IndicatorSeekBar 的依赖许可_
 
 (自定义Overlay和额外按钮)  
 <img src=".ext/0b7490680a13a2866e4d4a34cec5f6e7.jpg" width="320"/>
+
+(DropDown组件)  
+<img src=".ext/1.bmp" width="320"/>
