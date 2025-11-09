@@ -250,8 +250,12 @@ public class Indicator {
         refreshProgressText();
         if (mIndicatorPopW != null) {
             mIndicatorPopW.getContentView().measure(0, 0);
-            mIndicatorPopW.update(mSeekBar, (int) (touchX - mIndicatorPopW.getContentView().getMeasuredWidth() / 2),
-                    -(mSeekBar.getMeasuredHeight() + mIndicatorPopW.getContentView().getMeasuredHeight() - mSeekBar.getPaddingTop() /*- mSeekBar.getTextHeight() */ + mGap), -1, -1);
+            try {
+                mIndicatorPopW.update(mSeekBar, (int) (touchX - mIndicatorPopW.getContentView().getMeasuredWidth() / 2),
+                        -(mSeekBar.getMeasuredHeight() + mIndicatorPopW.getContentView().getMeasuredHeight() - mSeekBar.getPaddingTop() /*- mSeekBar.getTextHeight() */ + mGap), -1, -1);
+            } catch (Exception e) {
+                // **&# there is a exception should be record
+            }
             adjustArrow(touchX);
         }
     }
@@ -268,8 +272,12 @@ public class Indicator {
         refreshProgressText();
         if (mIndicatorPopW != null) {
             mIndicatorPopW.getContentView().measure(0, 0);
-            mIndicatorPopW.showAsDropDown(mSeekBar, (int) (touchX - mIndicatorPopW.getContentView().getMeasuredWidth() / 2f),
-                    -(mSeekBar.getMeasuredHeight() + mIndicatorPopW.getContentView().getMeasuredHeight() - mSeekBar.getPaddingTop() /*- mSeekBar.getTextHeight()*/ + mGap));
+            try {
+                mIndicatorPopW.showAsDropDown(mSeekBar, (int) (touchX - mIndicatorPopW.getContentView().getMeasuredWidth() / 2f),
+                        -(mSeekBar.getMeasuredHeight() + mIndicatorPopW.getContentView().getMeasuredHeight() - mSeekBar.getPaddingTop() /*- mSeekBar.getTextHeight()*/ + mGap));
+            } catch (Exception e) {
+                // **&# there is a exception should be record
+            }
             adjustArrow(touchX);
         }
     }
@@ -290,7 +298,11 @@ public class Indicator {
         if (mIndicatorPopW == null) {
             return;
         }
-        mIndicatorPopW.dismiss();
+        try {
+            mIndicatorPopW.dismiss();
+        } catch (Exception e) {
+            // **&# there is a exception should be record
+        }
     }
 
     boolean isShowing() {

@@ -220,7 +220,11 @@ public class OpenTBUI {
         if (windowType == WINDOW_TYPE_POPUP) {
 //            hideSystemUI();
             if (!isShown) {
-                popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+                try {
+                    popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+                } catch (Exception e) {
+                    // **&# there is a exception should be record
+                }
             }
         } else if (windowType == WINDOW_TYPE_GLOBAL) {
             if (!isShown) {

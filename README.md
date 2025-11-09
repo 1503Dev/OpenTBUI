@@ -14,7 +14,7 @@ IndicatorSeekBar 工件: [/indicatorseekbar](https://github.com/1503Dev/OpenTBUI
 
 本项目的 IndicatorSeekBar 工件是基于 [warkiz/IndicatorSeekBar](https://github.com/warkiz/IndicatorSeekBar) 修改而来的
 
-demo 已在 Android 8.1 和 Android 12 上测试通过
+demo 已在 Android 5.0(存在一些问题), Android 8.1, Android 12, Android 16 上测试通过
 
 ## 开放源代码许可
 _不包含 IndicatorSeekBar 的依赖许可_
@@ -26,6 +26,7 @@ _不包含 IndicatorSeekBar 的依赖许可_
 - AndroidX - Apache-2.0
 - RecyclerView - Apache-2.0
 - FlexBoxLayout - Apache-2.0
+- Material Design Icons - Apache-2.0
 
 ## 画廊
 <img src=".ext/a70c0ce5b2371eca060e37d4c48d88c1.jpg" width="320"/>

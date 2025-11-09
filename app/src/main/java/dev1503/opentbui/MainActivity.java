@@ -266,8 +266,8 @@ public class MainActivity extends AppCompatActivity {
         categoryCombat.addToggle("自动穿装");
 
         Category categoryOther = tbUI.addCategory("其他", R.drawable.ic_arrow_drop_down);
-        categoryOther.addDropDown("dropdown", new String[]{"abc", "def", "ghi"});
-        categoryOther.addDropDown("dropdown", new String[]{"a", "b", "c"});
+        categoryOther.addDropDown("Dropdown 1", "dropdown", new String[]{"abc", "def", "ghi"});
+        categoryOther.addDropDown("Dropdown 2", "dropdown", new String[]{"选项1", "选项2", "选项3"});
 
         Category categorySync = tbUI.addCategory("组件同步", R.drawable.ic_settings_black_24dp);
         categorySync.addToggle("path/to/a", "path/to/a");

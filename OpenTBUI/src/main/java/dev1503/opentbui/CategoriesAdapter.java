@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                 textView.setText(category.name);
 
                 if (category.iconId != 0) {
-                    @SuppressLint("UseCompatLoadingForDrawables") Drawable icon = context.getResources().getDrawable(category.iconId);
+                    Drawable icon = ResourcesCompat.getDrawable(context.getResources(), category.iconId, null);
                     textView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                 }
                 boolean isSelected = category.equals(selectedCategory);
