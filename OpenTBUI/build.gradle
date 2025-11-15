@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+//    id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -47,4 +49,29 @@ dependencies {
     implementation("com.google.android.material:material:1.7.0")
     // https://mvnrepository.com/artifact/com.google.android.flexbox/flexbox
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+}
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'dev1503.opentbui'
+            artifactId = 'OpenTBUI'
+            version = '202511151732.6'
+
+            afterEvaluate { project ->
+                println "Available components: ${components.names}"
+                if (components.findByName('release')) {
+                    from components.release
+                } else if (components.findByName('debug')) {
+                    from components.debug
+                } else if (components.findByName('default')) {
+                    from components.default
+                } else {
+                    // 如果没有找到标准组件，列出所有可用组件
+                    components.all { component ->
+                        println "Component: ${component.name}"
+                    }
+                }
+            }
+        }
+    }
 }

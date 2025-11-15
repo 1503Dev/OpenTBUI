@@ -1,13 +1,16 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
 
-def VERSION_NAME = "2.1.2"
+def VERSION_NAME = "2.1.3-1503dev"
 
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'indicatorseekbar'
 
-    publishedGroupId = 'com.github.warkiz.widget'
-    libraryName = 'IndicatorSeekbar'
+    publishedGroupId = 'dev1503.widget'
+    libraryName = 'IndicatorSeekBar'
     artifact = 'indicatorseekbar'
 
     libraryDescription = 'A custom SeekBar on Android, which can be changed the size ,color , thumb drawable , tick drawable , tick text and isb_indicator , also , will show an isb_indicator view with progress above SeekBar when seeking. '
@@ -17,7 +20,7 @@ ext {
 
     libraryVersion = VERSION_NAME
 
-    developerId = 'warkiz'
+    developerId = '1503dev'
     developerName = 'Guangquan Chuang & TheChuan1503'
     developerEmail = 'thechuan1503@1503dev.top'
 
