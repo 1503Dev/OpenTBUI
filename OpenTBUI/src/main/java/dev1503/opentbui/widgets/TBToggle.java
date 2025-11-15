@@ -573,6 +573,24 @@ public class TBToggle extends TBWidget {
         return addDropDown(name, null, items, 0, null);
     }
 
+    public TBDivider addDivider(String name) {
+        TBDivider tbDivider = new TBDivider(openTBUI, name);
+        addItem(tbDivider);
+        return tbDivider;
+    }
+    public TBDivider addDivider() {
+        return addDivider(null);
+    }
+
+    public TBLabel addLabel(String name) {
+        TBLabel tbLabel = new TBLabel(openTBUI, name);
+        addItem(tbLabel);
+        return tbLabel;
+    }
+    public TBLabel addLabel() {
+        return addLabel(null);
+    }
+
     public interface OnCheckedChangeListener {
         void onCheckedChanged(@NonNull TBToggle tbToggle, boolean isChecked);
     }

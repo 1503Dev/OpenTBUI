@@ -28,7 +28,6 @@ public class TBEditText extends TBWidget{
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
         this.onTextInputFinishListener = _onTextInputFinishListener;
-        view.setMinimumHeight(dp2px(context, 40));
         view.setPadding(dp2px(context, 12), 0, dp2px(context, 12), 0);
         editText = (AppCompatEditText) View.inflate(context, R.layout.list_text_edit, null);
         editText.setLayoutParams(new LinearLayout.LayoutParams(

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import dev1503.opentbui.picker.ItemSelector;
+
 public class TestNativeActivity extends NativeActivity {
     OpenTBUI tbUI;
     @Override
@@ -25,6 +27,11 @@ public class TestNativeActivity extends NativeActivity {
         bm1.eraseColor(Color.parseColor("#FF4081"));
         category2.addBlockList().addItem("Test Block List Item", bm1);
         category2.addRangeSlider("Test Range Slider", 0, 100);
+        category2.addAction("Test Action 2", v -> {
+            new ItemSelector(this, tbUI.theme, new String[]{"Item 1", "Item 2", "Item 3"}, (index, items) -> {
+                Toast.makeText(this, "Test Action 2 Clicked: " + items[index], Toast.LENGTH_SHORT).show();
+            });
+        });
         tbUI.addExtraButton(R.drawable.logout_24px, v -> {
             finish();
         });

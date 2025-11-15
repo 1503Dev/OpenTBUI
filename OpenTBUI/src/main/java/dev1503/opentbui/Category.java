@@ -14,8 +14,10 @@ import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.widgets.TBAction;
 import dev1503.opentbui.widgets.TBBlockList;
 import dev1503.opentbui.widgets.TBColor;
+import dev1503.opentbui.widgets.TBDivider;
 import dev1503.opentbui.widgets.TBDropDown;
 import dev1503.opentbui.widgets.TBEditText;
+import dev1503.opentbui.widgets.TBLabel;
 import dev1503.opentbui.widgets.TBRangeSlider;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
@@ -253,5 +255,23 @@ public class Category {
     }
     public TBDropDown addDropDown(String name, String[] items) {
         return addDropDown(name, null, items, 0, null);
+    }
+
+    public TBDivider addDivider(String name) {
+        TBDivider tbDivider = new TBDivider(openTBUI, name);
+        addWidget(tbDivider, null);
+        return tbDivider;
+    }
+    public TBDivider addDivider() {
+        return addDivider(null);
+    }
+
+    public TBLabel addLabel(String name) {
+        TBLabel tbLabel = new TBLabel(openTBUI, name);
+        addWidget(tbLabel, null);
+        return tbLabel;
+    }
+    public TBLabel addLabel() {
+        return addLabel(null);
     }
 }

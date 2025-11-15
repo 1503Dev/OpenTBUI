@@ -48,13 +48,17 @@
             android:drawablePadding="8dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"/>
-        <LinearLayout
+        <com.google.android.flexbox.FlexboxLayout
             android:layout_gravity="bottom|center_horizontal"
             android:layout_width="wrap_content"
             android:paddingBottom="16dp"
             android:id="@+id/extraBottonsLayout"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        </LinearLayout>
+            android:orientation="horizontal"
+            app:flexWrap="wrap"
+            app:flexDirection="row"
+            app:alignItems="stretch"
+            app:justifyContent="flex_start">
+        </com.google.android.flexbox.FlexboxLayout>
     </FrameLayout>
 </RelativeLayout>

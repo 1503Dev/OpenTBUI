@@ -58,7 +58,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColorHint="#88FFFFFF"
-            app:boxStrokeColor="#FF0000"
             android:hint="@string/color_value_red"
             android:layout_weight="1">
             <com.google.android.material.textfield.TextInputEditText

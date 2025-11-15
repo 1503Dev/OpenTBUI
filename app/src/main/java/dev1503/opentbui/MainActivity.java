@@ -16,8 +16,10 @@ import android.util.Log;
 import android.view.CollapsibleActionView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import dev1503.opentbui.picker.ItemSelector;
 import dev1503.opentbui.view.CircleSwitch;
 import dev1503.opentbui.view.Cube3DView;
 import dev1503.opentbui.widgets.TBAction;
@@ -36,6 +39,7 @@ import dev1503.opentbui.widgets.TBColor;
 import dev1503.opentbui.widgets.TBEditText;
 import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
+import dev1503.opentbui.widgets.TBWidget;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     OpenTBUI tbUI2;
     OpenTBUI tbUI3;
     OpenTBUI tbUI4;
+    OpenTBUI tbUI5;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -99,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         tbUI4 = OpenTBUI.fromApplication(this, statusManager);
         tbUI4.setTheme(new TBTheme(Color.parseColor("#FF5722"), Color.parseColor("#E64A19")));
         initTBUI(tbUI4);
+
+        tbUI5 = OpenTBUI.fromPopup(this, statusManager, R.layout.my_overlay2);
+        tbUI5.setTheme(new TBTheme(Color.parseColor("#9C27B0"), Color.parseColor("#7B1FA2")));
+        initTBUI(tbUI5);
     }
 
     @Override
@@ -117,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void start4(View view) {
         tbUI4.show();
+    }
+    public void start5(View view) {
+        tbUI5.show();
     }
 
     public void toNativeActivity(View view) {
@@ -266,15 +278,23 @@ public class MainActivity extends AppCompatActivity {
         toggleKillaura.addRangeSlider("攻击间隔", -1, 20);
         categoryCombat.addToggle("抗击退");
         categoryCombat.addToggle("弓箭自瞄");
-        categoryCombat.addAction("传送到玩家");
+        categoryCombat.addAction("传送到玩家", "teleport_to_player");
         TBToggle toggleHitbox = categoryCombat.addToggle("击中范围扩大");
         toggleHitbox.addRangeSlider("生物击中范围", 1, 8);
         toggleHitbox.addRangeSlider("玩家击中范围", 1, 8);
         categoryCombat.addToggle("自动穿装");
 
-        Category categoryOther = tbUI.addCategory("其他", R.drawable.ic_arrow_drop_down);
-        categoryOther.addDropDown("Dropdown 1", "dropdown", new String[]{"abc", "def", "ghi"});
-        categoryOther.addDropDown("Dropdown 2", "dropdown", new String[]{"选项1", "选项2", "选项3"});
+        Category categoryOther = tbUI.addCategory("其他", R.drawable.more_horiz_24px);
+        categoryOther.addDivider("DropDown");
+        categoryOther.addDropDown("DropDown 1", "dropdown", new String[]{"abc", "def", "ghi"});
+        categoryOther.addDropDown("DropDown 2", "dropdown", new String[]{"选项1", "选项2", "选项3"});
+        categoryOther.addDivider("Divider");
+        categoryOther.addDivider();
+        categoryOther.addDivider("Label");
+        categoryOther.addLabel("This is a Label");
+        categoryOther.addLabel("This is a long Label This is a long Label This is a long Label This is a long Label This is a long Label");
+        categoryOther.addDivider("Custom");
+        categoryOther.addWidget(new CustomWidget(tbUI));
 
         Category categorySync = tbUI.addCategory("组件同步", R.drawable.ic_settings_black_24dp);
         categorySync.addToggle("path/to/a", "path/to/a");
@@ -304,14 +324,14 @@ public class MainActivity extends AppCompatActivity {
         layoutToggle.addAction("重置", "reset_layout");
 
         Category categoryOss = tbUI.addCategory("开放源代码许可", R.drawable.ic_help_outline_black_24dp);
-        categoryOss.addToggle("OpenTBUI\n" + OpenTBUI.VERSION_NAME, true).addAction("LGPLv3");
-        categoryOss.addToggle("IndicatorSeekBar", true).addAction("Apache-2.0");
-        categoryOss.addToggle("AppCompat", true).addAction("Apache-2.0");
-        categoryOss.addToggle("MaterialComponents", true).addAction("Apache-2.0");
-        categoryOss.addToggle("AndroidX", true).addAction("Apache-2.0");
-        categoryOss.addToggle("RecyclerView", true).addAction("Apache-2.0");
-        categoryOss.addToggle("FlexBoxLayout", true).addAction("Apache-2.0");
-        categoryOss.addToggle("Material Design Icons", true).addAction("Apache-2.0");
+        categoryOss.addToggle("OpenTBUI\n" + OpenTBUI.VERSION_NAME, true).addLabel("LGPLv3");
+        categoryOss.addToggle("IndicatorSeekBar", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("AppCompat", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("MaterialComponents", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("AndroidX", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("RecyclerView", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("FlexBoxLayout", true).addLabel("Apache-2.0");
+        categoryOss.addToggle("Material Design Icons", true).addLabel("Apache-2.0");
 
         tbUI.addExtraButton(R.drawable.ic_launcher_foreground, (v) -> {
             Toast.makeText(this, "Extra Button 1 Clicked", Toast.LENGTH_SHORT).show();
@@ -374,8 +394,28 @@ public class MainActivity extends AppCompatActivity {
                         tbUI.setCategoriesViewWidth(dp2px(MainActivity.this, 186));
                         tbUI.setFeaturesViewWidth(dp2px(MainActivity.this, 240));
                         break;
+                    case "teleport_to_player":
+                        new ItemSelector(MainActivity.this, tbUI.theme, new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16", "Player 17", "Player 18", "Player 19", "Player 20"},
+                                (i, items) -> {
+                            Toast.makeText(MainActivity.this, "Teleport to " + items[i], Toast.LENGTH_SHORT).show();
+                        }).show();
+                        break;
                 }
             }
         });
+    }
+
+    class CustomWidget extends TBWidget {
+        public CustomWidget(OpenTBUI _openTBUI) {
+            super(_openTBUI, null, null);
+            view = new LinearLayout(context);
+            view.addView(new Switch(context));
+            TextView tv = new TextView(context);
+            tv.setText("112233");
+            view.addView(tv);
+            CheckBox cb = new CheckBox(context);
+            cb.setText("Checkbox");
+            view.addView(cb);
+        }
     }
 }

@@ -37,7 +37,6 @@ public class ColorPicker extends BottomSheet {
     AtomicInteger finalColor = new AtomicInteger();
     AtomicInteger finalAlpha = new AtomicInteger(255);
 
-
     ImageButton btnBack;
     Button btnDone;
 

@@ -3,7 +3,9 @@ package dev1503.opentbui;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dev1503.opentbui.widgets.TBColor;
 import dev1503.opentbui.widgets.TBDropDown;
@@ -15,6 +17,7 @@ import dev1503.opentbui.widgets.TBWidget;
 public class StatusManager {
     List<TBWidget> widgets = new ArrayList<>();
     Listener listener;
+    Map<String, Double> sdKv = new HashMap<>();
 
     public StatusManager() {}
     public StatusManager(Listener listener) {
@@ -28,6 +31,7 @@ public class StatusManager {
         widgets.add(widget);
     }
     public void setValue(TBWidget _widget, String path, double value) {
+        setValueOnly(path, value);
         if (path == null) {
             return;
         }
@@ -73,6 +77,40 @@ public class StatusManager {
         if (listener != null && path != null) {
             listener.onActionTrigger(path);
         }
+    }
+
+    public void setValueOnly(String path, double value) {
+        sdKv.put(path, value);
+    }
+
+    public double getDouble(String path, double defaultValue) {
+        if (sdKv.containsKey(path)) {
+            try {
+                return sdKv.get(path);
+            } catch (NullPointerException ignored) {}
+        }
+        return defaultValue;
+    }
+    public double getDouble(String path) {
+        return getDouble(path, 0.0);
+    }
+    public int getInt(String path, int defaultValue) {
+        return (int) getDouble(path, defaultValue);
+    }
+    public int getInt(String path) {
+        return getInt(path, 0);
+    }
+    public boolean getBoolean(String path, boolean defaultValue) {
+        return getDouble(path, defaultValue ? 1.0 : 0.0) >= 1.0;
+    }
+    public boolean getBoolean(String path) {
+        return getBoolean(path, false);
+    }
+    public float getFloat(String path, float defaultValue) {
+        return (float) getDouble(path, defaultValue);
+    }
+    public float getFloat(String path) {
+        return getFloat(path, 0.0f);
     }
 
     public interface Listener {

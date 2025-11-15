@@ -5,25 +5,18 @@ import static dev1503.opentbui.Utils.dp2px;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
-import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.SwitchCompat;
@@ -35,8 +28,6 @@ import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import dev1503.opentbui.view.CircleSwitch;
 import dev1503.opentbui.widgets.TBBlockList;
@@ -47,7 +38,7 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
-    public static final String VERSION_NAME = "v202511091550.5";
+    public static final String VERSION_NAME = "v202511151732.6";
 
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
@@ -59,10 +50,14 @@ public class OpenTBUI {
 
     PopupWindow popupWindow;
     WindowManager windowManager;
+    PopupWindow popupWindowShortcut;
+
     int windowType;
     View rootView;
     View contentView;
+    FrameLayout shortcutLayout;
     WindowManager.LayoutParams params;
+    WindowManager.LayoutParams paramsShortcut;
 
     boolean isInit = false;
     boolean isShown = false;
@@ -74,7 +69,7 @@ public class OpenTBUI {
     CategoriesAdapter categoriesAdapter;
     LinearLayout featuresView;
     TextView remainingTimeText;
-    LinearLayout extraButtonsLayout;
+    ViewGroup extraButtonsLayout;
 
     Runnable onHideListener;
     TBTheme theme;
@@ -91,6 +86,7 @@ public class OpenTBUI {
 
         tipBarIconSize = dp2px(context, 16);
 
+        this.shortcutLayout = new FrameLayout(context);
         contentView = overlayLayout;
         categoriesView = contentView.findViewById(R.id.categories);
         categoriesView.setLayoutManager(new LinearLayoutManager(context));
@@ -129,6 +125,15 @@ public class OpenTBUI {
                     onHideListener.run();
                 }
             });
+
+            popupWindowShortcut = new PopupWindow(activity);
+            popupWindowShortcut.setContentView(shortcutLayout);
+            popupWindowShortcut.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+            popupWindowShortcut.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+            popupWindowShortcut.setFocusable(false);
+            popupWindowShortcut.setOutsideTouchable(true);
+            popupWindowShortcut.setBackgroundDrawable(null);
+            popupWindowShortcut.setClippingEnabled(false);
         } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
             windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
             if (windowType == WINDOW_TYPE_GLOBAL) {
@@ -164,7 +169,7 @@ public class OpenTBUI {
         });
         remainingTimeText = contentView.findViewById(R.id.remaining_time_text);
         extraButtonsLayout = contentView.findViewById(R.id.extraBottonsLayout);
-        remainingTimeText.setText("Powered by 1503Dev/OpenTBUI " + VERSION_NAME);
+        remainingTimeText.setText(activity.getString(R.string.powered_by, "1503Dev/OpenTBUI " + VERSION_NAME));
 
     }
     public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, int overlayLayoutResId) {
@@ -274,6 +279,30 @@ public class OpenTBUI {
             if (isShown) {
                 windowManager.removeView(contentView);
                 isShown = false;
+            }
+        }
+    }
+    public void showShortcut() {
+        if (isFirstShow) {
+            isFirstShow = false;
+            if (!categories.isEmpty()) {
+                selectCategory(0);
+            }
+            refreshTheme();
+        }
+        contentView.setVisibility(View.VISIBLE);
+        if (windowType == WINDOW_TYPE_POPUP) {
+//            hideSystemUI();
+            if (!isShown) {
+                try {
+                    popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+                } catch (Exception ignored) {
+                }
+            }
+        } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
+            if (!isShown) {
+                windowManager.addView(contentView, params);
+                isShown = true;
             }
         }
     }
