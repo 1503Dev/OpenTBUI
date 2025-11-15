@@ -3,6 +3,20 @@ plugins {
 }
 
 android {
+    def localProperties = new Properties()
+    def localPropertiesFile = rootProject.file('local.properties')
+    if (localPropertiesFile.exists()) {
+        localProperties.load(new FileInputStream(localPropertiesFile))
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(localProperties.getProperty('SIGNING_KEY_PATH_OVERRIDE'))
+            storePassword localProperties.getProperty('SIGNING_KEY_PASSWORD')
+            keyPassword localProperties.getProperty('SIGNING_KEY_ALIAS_PASSWORD')
+            keyAlias localProperties.getProperty('SIGNING_KEY_ALIAS')
+        }
+    }
     namespace 'dev1503.opentbui'
     compileSdk 36
 

@@ -130,17 +130,22 @@ public class OpenTBUI {
                 }
             });
         } else if (windowType == WINDOW_TYPE_GLOBAL || windowType == WINDOW_TYPE_APPLICATION) {
+            windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
             if (windowType == WINDOW_TYPE_GLOBAL) {
-                windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                params = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        android.graphics.PixelFormat.TRANSLUCENT);
             } else {
-                windowManager = (WindowManager) activity.getWindowManager();
+                params = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.TYPE_APPLICATION,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        android.graphics.PixelFormat.TRANSLUCENT);
             }
-            params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    android.graphics.PixelFormat.TRANSLUCENT);
             params.gravity = Gravity.TOP | Gravity.LEFT;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;

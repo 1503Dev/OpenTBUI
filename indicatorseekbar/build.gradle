@@ -27,6 +27,20 @@ ext {
 }
 
 android {
+    def localProperties = new Properties()
+    def localPropertiesFile = rootProject.file('local.properties')
+    if (localPropertiesFile.exists()) {
+        localProperties.load(new FileInputStream(localPropertiesFile))
+    }
+
+    signingConfigs {
+        debug {
+            keyPassword localProperties.getProperty('SIGNING_KEY_ALIAS_PASSWORD')
+            storePassword localProperties.getProperty('SIGNING_KEY_PASSWORD')
+            keyAlias localProperties.getProperty('SIGNING_KEY_ALIAS')
+            storeFile file(localProperties.getProperty('SIGNING_KEY_PATH_OVERRIDE'))
+        }
+    }
     namespace "com.github.warkiz.widget.indicatorseekbar"
 
     compileSdkVersion 33
