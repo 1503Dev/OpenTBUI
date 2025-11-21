@@ -29,6 +29,10 @@ public class TBLabel extends TBWidget{
     }
 
     public void setText(CharSequence text) {
+        name = text.toString();
         textView.setText(text);
+    }
+    public String getText() {
+        return name;
     }
 }

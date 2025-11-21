@@ -47,6 +47,10 @@ public class Category {
         ));
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Category addWidget(TBWidget widget, String path) {
         widget.setPath(path);
         widgets.add(widget);

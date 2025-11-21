@@ -158,4 +158,13 @@ public class TBSlider extends TBWidget{
     public int getIndex() {
         return seekBar.getProgress();
     }
+
+    public String getName() {
+        return name;
+    }
+    public TBSlider setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
+    }
 }

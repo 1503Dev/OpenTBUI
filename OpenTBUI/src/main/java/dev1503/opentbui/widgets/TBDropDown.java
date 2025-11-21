@@ -97,4 +97,18 @@ public class TBDropDown extends TBWidget{
     public interface OnItemSelectedListener {
         void onItemSelected(TBDropDown dropDown, int position, String itemName);
     }
+
+    public String getName() {
+        return name;
+    }
+    public TBDropDown setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
+    }
+
+    public TBDropDown setItems(String[] items) {
+        this.items = items;
+        return this;
+    }
 }

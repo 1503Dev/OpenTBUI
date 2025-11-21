@@ -351,6 +351,15 @@ public class TBToggle extends TBWidget {
         return views.toArray(new TBWidget[0]);
     }
 
+    public String getName() {
+        return name;
+    }
+    public TBToggle setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
+    }
+
     public TBToggle addToggle(String name) {
         TBToggle toggle = new TBToggle(openTBUI, name);
         addItem(toggle);

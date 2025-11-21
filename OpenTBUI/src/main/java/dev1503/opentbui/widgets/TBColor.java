@@ -84,4 +84,13 @@ public class TBColor extends TBWidget{
     public @ColorInt int getColor() {
         return color;
     }
+
+    public String getName() {
+        return name;
+    }
+    public TBColor setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
+    }
 }

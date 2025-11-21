@@ -11,10 +11,12 @@ import dev1503.opentbui.OpenTBUI;
 import dev1503.opentbui.R;
 
 public class TBDivider extends TBWidget{
+    TextView textView;
+
     public TBDivider(OpenTBUI openTBUI, String name) {
         super(openTBUI, name, null);
         view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_divider, null);
-        TextView textView = view.findViewWithTag("text");
+        textView = view.findViewWithTag("text");
         textView.setText(name);
         if (name == null || name.isEmpty()) {
             textView.setVisibility(View.GONE);
@@ -27,5 +29,14 @@ public class TBDivider extends TBWidget{
     }
     public TBDivider(OpenTBUI openTBUI) {
         this(openTBUI, null);
+    }
+
+    public String getName() {
+        return name;
+    }
+    public TBDivider setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
     }
 }

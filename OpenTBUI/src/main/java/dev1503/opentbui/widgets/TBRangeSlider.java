@@ -122,4 +122,18 @@ public class TBRangeSlider extends TBWidget{
         seekBar.setDecimalScale(decimalScale);
         return this;
     }
+    public TBRangeSlider setRange(float min, float max) {
+        seekBar.setMin(min);
+        seekBar.setMax(max);
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public TBRangeSlider setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
+    }
 }

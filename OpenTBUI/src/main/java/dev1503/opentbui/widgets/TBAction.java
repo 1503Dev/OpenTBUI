@@ -43,7 +43,17 @@ public class TBAction extends TBWidget{
         this(openTBUI, name, null, null);
     }
 
-    public void setOnClickListener(View.OnClickListener listener) {
+    public TBAction setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public TBAction setName(String name) {
+        this.name = name;
+        textView.setText(name);
+        return this;
     }
 }
