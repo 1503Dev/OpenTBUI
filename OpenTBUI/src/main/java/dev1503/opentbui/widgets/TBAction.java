@@ -2,8 +2,10 @@ package dev1503.opentbui.widgets;
 
 import static dev1503.opentbui.Utils.dp2px;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,8 @@ import dev1503.opentbui.R;
 public class TBAction extends TBWidget{
     TextView textView;
     View.OnClickListener listener;
+    ImageView iconView;
+    View.OnLongClickListener longClickListener;
 
     public TBAction(OpenTBUI openTBUI, String name, String path, View.OnClickListener onClickListener) {
         super(openTBUI, name, path);
@@ -21,8 +25,9 @@ public class TBAction extends TBWidget{
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 dp2px(context, 40)
         ));
-        textView = view.findViewWithTag("binding_1");
+        textView = view.findViewWithTag("name");
         textView.setText(name);
+        iconView = view.findViewWithTag("icon");
         this.listener = onClickListener;
         view.setOnClickListener(view -> {
             if (listener != null) {
@@ -31,6 +36,12 @@ public class TBAction extends TBWidget{
             if  (openTBUI.getStatusManager() != null) {
                 openTBUI.getStatusManager().trigger(getPath());
             }
+        });
+        view.setOnLongClickListener(view -> {
+            if (longClickListener != null) {
+                return longClickListener.onLongClick(view);
+            }
+            return false;
         });
     }
     public TBAction(OpenTBUI openTBUI, String name, View.OnClickListener onClickListener) {
@@ -47,6 +58,10 @@ public class TBAction extends TBWidget{
         this.listener = listener;
         return this;
     }
+    public TBAction setOnLongClickListener(View.OnLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -54,6 +69,15 @@ public class TBAction extends TBWidget{
     public TBAction setName(String name) {
         this.name = name;
         textView.setText(name);
+        return this;
+    }
+
+    public TBAction setIcon(int iconResId) {
+        iconView.setImageResource(iconResId);
+        return this;
+    }
+    public TBAction setIcon(Bitmap iconBitmap) {
+        iconView.setImageBitmap(iconBitmap);
         return this;
     }
 }
