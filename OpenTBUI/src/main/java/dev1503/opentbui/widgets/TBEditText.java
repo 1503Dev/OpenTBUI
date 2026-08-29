@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import java.util.Objects;
 
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 import dev1503.opentbui.picker.TextInputting;
 
 public class TBEditText extends TBWidget{
@@ -29,11 +29,7 @@ public class TBEditText extends TBWidget{
         ));
         this.onTextInputFinishListener = _onTextInputFinishListener;
         view.setPadding(dp2px(context, 12), 0, dp2px(context, 12), 0);
-        editText = (AppCompatEditText) View.inflate(context, R.layout.list_text_edit, null);
-        editText.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
+        editText = (AppCompatEditText) UIFactory.buildEditTextLayout(context);
         view.addView(editText);
         editText.setHint(name);
         editText.setText(defaultText);

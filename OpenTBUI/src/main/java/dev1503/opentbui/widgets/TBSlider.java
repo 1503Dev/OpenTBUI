@@ -3,46 +3,35 @@ package dev1503.opentbui.widgets;
 import static dev1503.opentbui.Utils.dp2px;
 
 import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBSlider extends TBWidget{
-    Context context;
-    TBSlider self = this;
+    private Context context;
 
-    TextView textView;
-    IndicatorSeekBar seekBar;
+    private TextView textView;
+    private IndicatorSeekBar seekBar;
 
     private float[] values = {};
 
-    OnValueChangeListener onValueChangeListener;
-    boolean isSlideByUser = true;
+    private OnValueChangeListener onValueChangeListener;
+    private boolean isSlideByUser = true;
 
     public TBSlider(OpenTBUI openTBUI, String name, String path, OnValueChangeListener seekChangeListener, float[] values) {
         super(openTBUI, name, path);
         context = openTBUI.getContext();
-        view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_slider, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(context, 40)
-        ));
-        textView = view.findViewWithTag("binding_1");
-        seekBar = view.findViewById(R.id.seekbar);
+        view = UIFactory.buildSliderLayout(context);
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_BINDING_1);
+        seekBar = (IndicatorSeekBar) view.findViewWithTag(UIFactory.TAG_SEEKBAR);
         setValues(values);
         textView.setText(name);
         this.onValueChangeListener = seekChangeListener;
@@ -50,11 +39,14 @@ public class TBSlider extends TBWidget{
             @Override
             public void onSeeking(SeekParams seekParams) {
                 if (seekParams.fromUser) {
-                    if (onValueChangeListener != null) {
-                        onValueChangeListener.onValueChange(self, self.values[(int)seekBar.getProgress()], (int)seekBar.getProgress());
-                    }
-                    if (openTBUI.getStatusManager() != null && isSlideByUser) {
-                        openTBUI.getStatusManager().setValue(self, getPath(), self.values[(int)seekBar.getProgress()]);
+                    int progress = (int) seekBar.getProgress();
+                    if (progress >= 0 && progress < values.length) {
+                        if (onValueChangeListener != null) {
+                            onValueChangeListener.onValueChange(TBSlider.this, values[progress], progress);
+                        }
+                        if (openTBUI.getStatusManager() != null && isSlideByUser) {
+                            openTBUI.getStatusManager().setValue(TBSlider.this, getPath(), values[progress]);
+                        }
                     }
                 }
             }
@@ -125,26 +117,28 @@ public class TBSlider extends TBWidget{
     }
 
     public TBSlider setValue(float value) {
-        List<Float> list = new ArrayList<>();
-        for (float v : values) {
-            list.add(v);
-        }
-        if (list.contains(value)) {
-            seekBar.setProgress(list.indexOf(value));
+        int index = indexOfValue(value);
+        if (index >= 0) {
+            seekBar.setProgress(index);
         }
         return this;
     }
     public TBSlider setValueWithoutNotify(float value) {
-        List<Float> list = new ArrayList<>();
-        for (float v : values) {
-            list.add(v);
-        }
-        if (list.contains(value)) {
+        int index = indexOfValue(value);
+        if (index >= 0) {
             isSlideByUser = false;
-            seekBar.setProgress(list.indexOf(value));
+            seekBar.setProgress(index);
             isSlideByUser = true;
         }
         return this;
+    }
+    private int indexOfValue(float value) {
+        for (int i = 0; i < values.length; i++) {
+            if (Float.compare(values[i], value) == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
     public TBSlider setIndex(int index) {
         if (index >= 0 && index < values.length) {
@@ -153,7 +147,18 @@ public class TBSlider extends TBWidget{
         return this;
     }
     public float getValue() {
-        return values[seekBar.getProgress()];
+        int index = seekBar.getProgress();
+        if (index >= 0 && index < values.length) {
+            return values[index];
+        }
+        return 0f;
+    }
+
+    @Override
+    public void syncValue(double value) {
+        if (Double.compare(getValue(), value) != 0) {
+            setValueWithoutNotify((float) value);
+        }
     }
     public int getIndex() {
         return seekBar.getProgress();

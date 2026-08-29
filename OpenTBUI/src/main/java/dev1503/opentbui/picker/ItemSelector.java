@@ -16,8 +16,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 import java.util.Objects;
 
 import dev1503.opentbui.BottomSheet;
-import dev1503.opentbui.R;
 import dev1503.opentbui.TBTheme;
+import dev1503.opentbui.UIFactory;
 import dev1503.opentbui.Utils;
 
 public class ItemSelector extends BottomSheet {
@@ -26,8 +26,8 @@ public class ItemSelector extends BottomSheet {
 
     @SuppressLint("SetTextI18n")
     public ItemSelector(Context context, TBTheme theme, String[] items, OnItemSelectListener onItemSelectListener){
-        super(context, theme, (LinearLayout) LinearLayout.inflate(context, R.layout.dialog_item_selector, null));
-        btnBack = contentView.findViewWithTag("back");
+        super(context, theme, (LinearLayout) UIFactory.buildItemSelectorDialog(context));
+        btnBack = contentView.findViewWithTag(UIFactory.TAG_BACK);
         btnBack.setOnClickListener(view -> {
             sheet.cancel();
         });

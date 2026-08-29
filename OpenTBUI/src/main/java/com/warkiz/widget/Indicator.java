@@ -3,7 +3,7 @@ package com.warkiz.widget;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import androidx.annotation.*;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -12,8 +12,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import com.github.warkiz.widget.indicatorseekbar.R;
+import androidx.annotation.Nullable;
 
 /**
  * created by zhuangguangquan on 2017/9/9
@@ -86,82 +85,113 @@ public class Indicator {
         }
     }
 
+    // indicator 布局中的 View ID，用纯代码 set 生成
+    private static final int ID_CONTAINER = 0x7F000001;
+    private static final int ID_PROGRESS = 0x7F000002;
+    private static final int ID_ARROW = 0x7F000003;
+
     private void initIndicator() {
         if (mIndicatorType == IndicatorType.CUSTOM) {
             if (mIndicatorCustomView != null) {
                 mIndicatorView = mIndicatorCustomView;
-                //for the custom indicator view, if progress need to show when seeking ,
-                // need a TextView to show progress and this textView 's identify must be progress;
-                int progressTextViewId = mContext.getResources().getIdentifier("isb_progress", "id", mContext.getApplicationContext().getPackageName());
-                if (progressTextViewId > 0) {
-                    View view = mIndicatorView.findViewById(progressTextViewId);
-                    if (view != null) {
-                        if (view instanceof TextView) {
-                            //progressText
-                            mProgressTextView = (TextView) view;
-                            mProgressTextView.setText(mSeekBar.getIndicatorTextString());
-                            mProgressTextView.setTextSize(SizeUtils.px2sp(mContext, mIndicatorTextSize));
-                            mProgressTextView.setTextColor(mIndicatorTextColor);
-                        } else {
-                            throw new ClassCastException("the view identified by isb_progress in indicator custom layout can not be cast to TextView");
-                        }
-                    }
+                // 查找自定义布局中 id 为 ID_PROGRESS 的 TextView
+                View view = mIndicatorView.findViewById(ID_PROGRESS);
+                if (view instanceof TextView) {
+                    mProgressTextView = (TextView) view;
+                    mProgressTextView.setText(mSeekBar.getIndicatorTextString());
+                    mProgressTextView.setTextSize(SizeUtils.px2sp(mContext, mIndicatorTextSize));
+                    mProgressTextView.setTextColor(mIndicatorTextColor);
                 }
             } else {
-                throw new IllegalArgumentException("the attr：indicator_custom_layout must be set while you set the indicator type to CUSTOM.");
+                throw new IllegalArgumentException("the attr: indicator_custom_layout must be set while you set the indicator type to CUSTOM.");
             }
         } else {
             if (mIndicatorType == IndicatorType.CIRCULAR_BUBBLE) {
                 mIndicatorView = new CircleBubbleView(mContext, mIndicatorTextSize, mIndicatorTextColor, mIndicatorColor, "1000");
                 ((CircleBubbleView) mIndicatorView).setProgress(mSeekBar.getIndicatorTextString());
             } else {
-                mIndicatorView = View.inflate(mContext, R.layout.isb_indicator, null);
-                //container
-                mTopContentView = (LinearLayout) mIndicatorView.findViewById(R.id.indicator_container);
-                //arrow
-                mArrowView = (ArrowView) mIndicatorView.findViewById(R.id.indicator_arrow);
+                // 纯代码构建 indicator 布局，替代 isb_indicator.xml
+                mIndicatorView = buildIndicatorView();
+                mTopContentView = (LinearLayout) mIndicatorView.findViewById(ID_CONTAINER);
+                mArrowView = (ArrowView) mIndicatorView.findViewById(ID_ARROW);
                 mArrowView.setColor(mIndicatorColor);
-                //progressText
-                mProgressTextView = (TextView) mIndicatorView.findViewById(R.id.isb_progress);
+                mProgressTextView = (TextView) mIndicatorView.findViewById(ID_PROGRESS);
                 mProgressTextView.setText(mSeekBar.getIndicatorTextString());
                 mProgressTextView.setTextSize(SizeUtils.px2sp(mContext, mIndicatorTextSize));
                 mProgressTextView.setTextColor(mIndicatorTextColor);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    mTopContentView.setBackground(getGradientDrawable());
-                } else {
-                    mTopContentView.setBackgroundDrawable(getGradientDrawable());
-                }
+                mTopContentView.setBackground(getGradientDrawable());
+
                 //custom top content view
                 if (mIndicatorCustomTopContentView != null) {
-                    //for the custom indicator top content view, if progress need to show when seeking ,
-                    //need a TextView to show progress and this textView 's identify must be progress;
-                    int progressTextViewId = mContext.getResources().getIdentifier("isb_progress", "id", mContext.getApplicationContext().getPackageName());
                     View topContentView = mIndicatorCustomTopContentView;
-                    if (progressTextViewId > 0) {
-                        View tv = topContentView.findViewById(progressTextViewId);
-                        if (tv != null && tv instanceof TextView) {
-                            setTopContentView(topContentView, (TextView) tv);
-                        } else {
-                            setTopContentView(topContentView);
-                        }
+                    View tv = topContentView.findViewById(ID_PROGRESS);
+                    if (tv instanceof TextView) {
+                        setTopContentView(topContentView, (TextView) tv);
                     } else {
                         setTopContentView(topContentView);
                     }
-
                 }
             }
         }
     }
 
+    /**
+     * 纯代码构建 indicator 布局（替代 isb_indicator.xml）
+     */
+    private View buildIndicatorView() {
+        LinearLayout root = new LinearLayout(mContext);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // container (top content + progress text)
+        LinearLayout container = new LinearLayout(mContext);
+        container.setId(ID_CONTAINER);
+        container.setGravity(Gravity.CENTER);
+        container.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // progress text
+        TextView progressText = new TextView(mContext);
+        progressText.setId(ID_PROGRESS);
+        progressText.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        progressText.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        progressText.setMaxLines(1);
+        progressText.setMinWidth(SizeUtils.dp2px(mContext, 12));
+        int padV = SizeUtils.dp2px(mContext, 4);
+        int padH = SizeUtils.dp2px(mContext, 8);
+        progressText.setPadding(padH, padV, padH, padV);
+        progressText.setText("Indicator");
+        progressText.setTextSize(SizeUtils.px2sp(mContext, SizeUtils.sp2px(mContext, 13)));
+        container.addView(progressText);
+
+        root.addView(container);
+
+        // arrow
+        ArrowView arrow = new ArrowView(mContext);
+        arrow.setId(ID_ARROW);
+        LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        arrowParams.gravity = Gravity.CENTER_HORIZONTAL;
+        root.addView(arrow, arrowParams);
+
+        return root;
+    }
+
     @NonNull
     private GradientDrawable getGradientDrawable() {
-        GradientDrawable tvDrawable;
-        if (mIndicatorType == IndicatorType.ROUNDED_RECTANGLE) {
-            tvDrawable = (GradientDrawable) mContext.getResources().getDrawable(R.drawable.isb_indicator_rounded_corners);
-        } else {
-            tvDrawable = (GradientDrawable) mContext.getResources().getDrawable(R.drawable.isb_indicator_square_corners);
-        }
+        GradientDrawable tvDrawable = new GradientDrawable();
+        tvDrawable.setShape(GradientDrawable.RECTANGLE);
         tvDrawable.setColor(mIndicatorColor);
+        if (mIndicatorType == IndicatorType.ROUNDED_RECTANGLE) {
+            int radius = SizeUtils.dp2px(mContext, 8);
+            tvDrawable.setCornerRadius(radius);
+            tvDrawable.setSize(SizeUtils.dp2px(mContext, 28), SizeUtils.dp2px(mContext, 16));
+        } else {
+            tvDrawable.setCornerRadius(0);
+            tvDrawable.setSize(SizeUtils.dp2px(mContext, 24), SizeUtils.dp2px(mContext, 16));
+        }
         return tvDrawable;
     }
 

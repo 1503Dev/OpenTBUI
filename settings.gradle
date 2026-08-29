@@ -22,4 +22,3 @@ dependencyResolutionManagement {
 rootProject.name = "OpenTBUI"
 include ':app'
 include ':OpenTBUI'
-include ':indicatorseekbar'

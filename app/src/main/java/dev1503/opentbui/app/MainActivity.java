@@ -1,4 +1,4 @@
-package dev1503.opentbui;
+package dev1503.opentbui.app;
 
 import static dev1503.opentbui.Utils.dp2px;
 
@@ -13,31 +13,28 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.CollapsibleActionView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import dev1503.opentbui.Category;
+import dev1503.opentbui.Icon;
+import dev1503.opentbui.OpenTBUI;
+import dev1503.opentbui.StatusManager;
+import dev1503.opentbui.TBTheme;
 import dev1503.opentbui.picker.ItemSelector;
-import dev1503.opentbui.view.CircleSwitch;
-import dev1503.opentbui.view.Cube3DView;
-import dev1503.opentbui.widgets.TBAction;
 import dev1503.opentbui.widgets.TBBlockList;
-import dev1503.opentbui.widgets.TBColor;
 import dev1503.opentbui.widgets.TBEditText;
-import dev1503.opentbui.widgets.TBSlider;
 import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
@@ -83,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
         tbUI2 = OpenTBUI.fromPopup(this, statusManager, R.layout.my_overlay);
         tbUI2.setTheme(new TBTheme(Color.parseColor("#8C9EFF"), Color.parseColor("#3F51B5")));
         final boolean[] hasIcon = {true};
-        tbUI2.getTipBar().setText("This is a tip with icon(clickable)").setIcon(R.drawable.small_colored_add_icon).setOnClickListener((view -> {
+        tbUI2.getTipBar().setText("This is a tip with icon(clickable)").setIcon(new Icon(R.drawable.small_colored_add_icon)).setOnClickListener((view -> {
             if (hasIcon[0]) {
                 tbUI2.getTipBar().removeIcon().setText("This is a tip(clickable)");
                 hasIcon[0] = false;
             } else {
-                tbUI2.getTipBar().setIcon(R.drawable.small_colored_add_icon).setText("This is a tip with icon(clickable)");
+                tbUI2.getTipBar().setIcon(new Icon(R.drawable.small_colored_add_icon)).setText("This is a tip with icon(clickable)");
                 hasIcon[0] = true;
             }
         }));
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         return drawableToBitmap(getDrawable(resId));
     }
     public void initTBUI(OpenTBUI tbUI) {
-        Category categoryMovement = tbUI.addCategory("动态", R.drawable.directions_run_24px);
+        Category categoryMovement = tbUI.addCategory("动态", new Icon(R.drawable.directions_run_24px));
         categoryMovement.addToggle("飞行");
         categoryMovement.addToggle("穿透飞行");
         categoryMovement.addToggle("穿透");
@@ -186,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         categoryMovement.addToggle("点击传送")
                 .addToggle("服务器模式");
 
-        Category categoryWorld = tbUI.addCategory("世界", R.drawable.deployed_code_24px);
+        Category categoryWorld = tbUI.addCategory("世界", new Icon(R.drawable.deployed_code_24px));
         categoryWorld.addToggle("空中行者（须手持可放置项目）");
         categoryWorld.addToggle("快速拿取箱子物品");
         categoryWorld.addToggle("范围破坏")
@@ -216,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         categoryWorld.addToggle("覆盖名称")
                 .addEditText("", "Open Toolbox User Interface");
 
-        Category categoryRender = tbUI.addCategory("渲染", R.drawable.photo_camera_24px);
+        Category categoryRender = tbUI.addCategory("渲染", new Icon(R.drawable.photo_camera_24px));
         TBToggle toggleXray = categoryRender.addToggle("透视");
         TBEditText editTextXraySelected = toggleXray.addEditText("现行选中项");;
         TBBlockList blockList = toggleXray.addBlockList()
@@ -262,16 +259,16 @@ public class MainActivity extends AppCompatActivity {
         categoryRender.addToggle("血量条");
         TBToggle tinyMap = categoryRender.addToggle("小地图");
         tinyMap.addRangeSlider("半径", 1, 8).setValue(4);
-        tinyMap.addRangeSlider("尺寸", 64, 320).setValue(128);
+        tinyMap.addRangeSlider("尺寸", "map_size", 64, 320).setValue(128).setDecimalScale(1);
         tinyMap.addToggle("显示玩家");
         categoryRender.addToggle("截断文字")
                 .addSlider("长度", new float[]{0, 16, 32, 64, 128, 512});
         categoryRender.addToggle("放大")
                 .addRangeSlider("倍数", -100, 100);
 
-        tbUI.addCategory("命令", R.drawable.chat_24px)
+        tbUI.addCategory("命令", new Icon(R.drawable.chat_24px))
                 .addAction("暂不考虑制作");
-        Category categoryCombat = tbUI.addCategory("战斗", R.drawable.swords_24px);
+        Category categoryCombat = tbUI.addCategory("战斗", new Icon(R.drawable.swords_24px));
         TBToggle toggleKillaura = categoryCombat.addToggle("范围自动攻击");
         toggleKillaura.addToggle("攻击生物");
         toggleKillaura.addToggle("攻击玩家");
@@ -284,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         toggleHitbox.addRangeSlider("玩家击中范围", 1, 8);
         categoryCombat.addToggle("自动穿装");
 
-        Category categoryOther = tbUI.addCategory("其他", R.drawable.more_horiz_24px);
+        Category categoryOther = tbUI.addCategory("其他", new Icon(R.drawable.more_horiz_24px));
         categoryOther.addDivider("DropDown");
         categoryOther.addDropDown("DropDown 1", "dropdown", new String[]{"abc", "def", "ghi"});
         categoryOther.addDropDown("DropDown 2", "dropdown", new String[]{"选项1", "选项2", "选项3"});
@@ -296,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         categoryOther.addDivider("Custom");
         categoryOther.addWidget(new CustomWidget(tbUI));
 
-        Category categorySync = tbUI.addCategory("组件同步", R.drawable.ic_settings_black_24dp);
+        Category categorySync = tbUI.addCategory("组件同步", new Icon(R.drawable.ic_settings_black_24dp));
         categorySync.addToggle("path/to/a", "path/to/a");
         categorySync.addToggle("path/to/a", "path/to/a");
         categorySync.addToggle("", (tBToggle, b) -> {
@@ -313,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         categorySync.addRangeSlider("path/to/c", "path/to/c", -2147483678f, 2147483647);
         categorySync.addAction("action", "this/is/a/action");
 
-        Category customCategory = tbUI.addCategory("自定义", R.drawable.inbox_customize_24px);
+        Category customCategory = tbUI.addCategory("自定义", new Icon(R.drawable.inbox_customize_24px));
         TBToggle themeToggle = customCategory.addToggle("主题", true);
         themeToggle.addColor("主要颜色", "theme/color1", Color.parseColor("#00E676"));
         themeToggle.addColor("次要颜色", "theme/color2", Color.parseColor("#43A047"));
@@ -323,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
         layoutToggle.addRangeSlider("Features 宽度", "features/width", 144, 512 ).setValueWithoutNotify(240);
         layoutToggle.addAction("重置", "reset_layout");
 
-        Category categoryOss = tbUI.addCategory("开放源代码许可", R.drawable.ic_help_outline_black_24dp);
+        Category categoryOss = tbUI.addCategory("开放源代码许可", new Icon(R.drawable.ic_help_outline_black_24dp));
         categoryOss.addToggle("OpenTBUI\n" + OpenTBUI.VERSION_NAME, true).addLabel("LGPLv3");
         categoryOss.addToggle("IndicatorSeekBar", true).addLabel("Apache-2.0");
         categoryOss.addToggle("AppCompat", true).addLabel("Apache-2.0");
@@ -333,22 +330,22 @@ public class MainActivity extends AppCompatActivity {
         categoryOss.addToggle("FlexBoxLayout", true).addLabel("Apache-2.0");
         categoryOss.addToggle("Material Design Icons", true).addLabel("Apache-2.0");
 
-        tbUI.addExtraButton(R.drawable.ic_launcher_foreground, (v) -> {
+        tbUI.addExtraButton(new Icon(R.drawable.ic_launcher_foreground), (v) -> {
             Toast.makeText(this, "Extra Button 1 Clicked", Toast.LENGTH_SHORT).show();
         });
-        tbUI.addExtraButton(R.drawable.ic_settings_black_24dp, (v) -> {
+        tbUI.addExtraButton(new Icon(R.drawable.ic_settings_black_24dp), (v) -> {
             Toast.makeText(this, "Extra Button 2 Clicked", Toast.LENGTH_SHORT).show();
         });
-        tbUI.addExtraButton(R.drawable.ic_help_outline_black_24dp, (v) -> {
+        tbUI.addExtraButton(new Icon(R.drawable.ic_help_outline_black_24dp), (v) -> {
             Toast.makeText(this, "Extra Button 3 Clicked", Toast.LENGTH_SHORT).show();
         });
-        tbUI.addExtraButton(R.drawable.ic_arrow_back_black_24dp, (v) -> {
+        tbUI.addExtraButton(Icon.ICON_ARROW_BACK, (v) -> {
             Toast.makeText(this, "Extra Button 4 Clicked", Toast.LENGTH_SHORT).show();
         });
-        tbUI.addExtraButton(R.drawable.directions_run_24px, (v) -> {
+        tbUI.addExtraButton(new Icon(R.drawable.directions_run_24px), (v) -> {
             tbUI.selectCategory(0);
         });
-        tbUI.addExtraButton(R.drawable.deployed_code_24px, (v) -> {
+        tbUI.addExtraButton(new Icon(R.drawable.deployed_code_24px), (v) -> {
             tbUI.selectCategory(1);
         });
 
@@ -375,6 +372,9 @@ public class MainActivity extends AppCompatActivity {
                     case "features/width":
                         tbUI1.setFeaturesViewWidth(dp2px(MainActivity.this, (int) value));
                         break;
+                    case "map_size":
+                        Log.d("map_size", "map_size: " + value);
+                        break;
                 }
             }
 
@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                         tbUI.setFeaturesViewWidth(dp2px(MainActivity.this, 240));
                         break;
                     case "teleport_to_player":
-                        new ItemSelector(MainActivity.this, tbUI.theme, new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16", "Player 17", "Player 18", "Player 19", "Player 20"},
+                        new ItemSelector(MainActivity.this, tbUI.getTheme(), new String[]{"Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10", "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16", "Player 17", "Player 18", "Player 19", "Player 20"},
                                 (i, items) -> {
                             Toast.makeText(MainActivity.this, "Teleport to " + items[i], Toast.LENGTH_SHORT).show();
                         }).show();

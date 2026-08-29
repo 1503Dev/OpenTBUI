@@ -20,11 +20,8 @@ public class TBWidget {
         this.name = _name;
         this.path = _path;
         this.openTBUI = _openTBUI;
-        this.context = openTBUI.getActivity();
-        context = openTBUI.getActivity();
-        this.activity = openTBUI.getActivity();
-        name = _name;
-        openTBUI = _openTBUI;
+        this.context = _openTBUI.getActivity();
+        this.activity = _openTBUI.getActivity();
         this.view = new LinearLayout(context);
     }
     public TBWidget(OpenTBUI _openTBUI, String _name) {
@@ -39,5 +36,15 @@ public class TBWidget {
     }
     public void setPath(String path) {
         this.path = path;
+    }
+
+    /**
+     * 从 StatusManager 同步值到此 widget（不触发回调）。
+     * 子类应重写此方法以实现各自的同步逻辑。
+     *
+     * @param value 要同步的值
+     */
+    public void syncValue(double value) {
+        // 默认不做任何操作，子类按需重写
     }
 }

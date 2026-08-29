@@ -12,7 +12,7 @@ import androidx.appcompat.widget.PopupMenu;
 import java.util.Objects;
 
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBDropDown extends TBWidget{
     TextView textView;
@@ -23,13 +23,9 @@ public class TBDropDown extends TBWidget{
 
     public TBDropDown(OpenTBUI openTBUI, String name, String path, String[] items, int defaultPosition, TBDropDown.OnItemSelectedListener listener) {
         super(openTBUI, name, path);
-        view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_drop_down, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(context, 40)
-        ));
-        textView = view.findViewWithTag("binding_1");
-        textViewValue = view.findViewWithTag("value");
+        view = UIFactory.buildDropDownLayout(context);
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_BINDING_1);
+        textViewValue = (TextView) view.findViewWithTag(UIFactory.TAG_VALUE);
         textViewValue.setText("");
         textView.setText(name);
         this.items = items;
@@ -85,6 +81,13 @@ public class TBDropDown extends TBWidget{
     }
     public int getPosition() {
         return position;
+    }
+
+    @Override
+    public void syncValue(double value) {
+        if (Double.compare(getPosition(), value) != 0) {
+            selectItemWithoutNotify((int) value);
+        }
     }
     public String getText() {
         return textViewValue.getText().toString();

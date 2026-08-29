@@ -2,15 +2,15 @@ package dev1503.opentbui.widgets;
 
 import static dev1503.opentbui.Utils.dp2px;
 
-import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import dev1503.opentbui.Icon;
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBAction extends TBWidget{
     TextView textView;
@@ -20,14 +20,10 @@ public class TBAction extends TBWidget{
 
     public TBAction(OpenTBUI openTBUI, String name, String path, View.OnClickListener onClickListener) {
         super(openTBUI, name, path);
-        view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_action, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(context, 40)
-        ));
-        textView = view.findViewWithTag("name");
+        view = UIFactory.buildActionLayout(context);
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_NAME);
         textView.setText(name);
-        iconView = view.findViewWithTag("icon");
+        iconView = (ImageView) view.findViewWithTag(UIFactory.TAG_ICON);
         this.listener = onClickListener;
         view.setOnClickListener(view -> {
             if (listener != null) {
@@ -72,12 +68,10 @@ public class TBAction extends TBWidget{
         return this;
     }
 
-    public TBAction setIcon(int iconResId) {
-        iconView.setImageResource(iconResId);
-        return this;
-    }
-    public TBAction setIcon(Bitmap iconBitmap) {
-        iconView.setImageBitmap(iconBitmap);
+    public TBAction setIcon(Icon icon) {
+        if (icon != null) {
+            iconView.setImageDrawable(icon.resolve(iconView.getContext()));
+        }
         return this;
     }
 }

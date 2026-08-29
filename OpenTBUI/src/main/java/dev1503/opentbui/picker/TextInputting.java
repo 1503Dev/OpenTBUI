@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatEditText;
 import java.util.Objects;
 
 import dev1503.opentbui.BottomSheet;
-import dev1503.opentbui.R;
 import dev1503.opentbui.TBTheme;
+import dev1503.opentbui.UIFactory;
 import dev1503.opentbui.Utils;
 
 public class TextInputting extends BottomSheet {
@@ -23,9 +23,9 @@ public class TextInputting extends BottomSheet {
 
     @SuppressLint("SetTextI18n")
     public TextInputting(Context context, TBTheme theme, String defaultText, OnTextInputFinishListener onTextInputFinishListener){
-        super(context, theme, (LinearLayout) LinearLayout.inflate(context, R.layout.dialog_text_inputting, null));
-        btnBack = contentView.findViewWithTag("binding_1");
-        btnDone = contentView.findViewWithTag("binding_2");
+        super(context, theme, (LinearLayout) UIFactory.buildTextInputDialog(context));
+        btnBack = contentView.findViewWithTag(UIFactory.TAG_BACK);
+        btnDone = contentView.findViewWithTag(UIFactory.TAG_DONE);
         btnBack.setOnClickListener(view -> {
             sheet.cancel();
         });
@@ -35,7 +35,7 @@ public class TextInputting extends BottomSheet {
         });
         btnDone.setTextColor(theme.getButtonTextColor());
 
-        editText = contentView.findViewById(R.id.edit_text);
+        editText = contentView.findViewWithTag(UIFactory.TAG_EDIT_TEXT);
         editText.setText(defaultText);
         Utils.setEditTextUnderlineColor(editText, theme.getEditTextUnderlineColor());
         Utils.setEditTextCursorColor(editText, theme.getEditTextCursorColor());

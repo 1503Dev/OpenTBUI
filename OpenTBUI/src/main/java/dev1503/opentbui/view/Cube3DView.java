@@ -49,6 +49,9 @@ public class Cube3DView extends View {
      * 设置三个面的独立纹理 [正面, 右侧面, 顶面]
      */
     public void setTextures(Bitmap[] textures) {
+        if (textures == null || textures.length < 3) {
+            throw new IllegalArgumentException("textures array must contain at least 3 elements [top, left, right]");
+        }
         if (this.textures == textures) return;
         this.textures = new Bitmap[]{
                 textures[2],
