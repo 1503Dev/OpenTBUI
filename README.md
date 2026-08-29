@@ -10,14 +10,29 @@
 OpenTBUI 工件: [/OpenTBUI](https://github.com/1503Dev/OpenTBUI/tree/main/OpenTBUI)  
 IndicatorSeekBar 工件: [/indicatorseekbar](https://github.com/1503Dev/OpenTBUI/tree/main/indicatorseekbar)  
   
-预编译的工件 aar(包括 OpenTBUI 和 IndicatorSeekBar) 和 示例 demo apk 可以在 [Release](https://github.com/1503Dev/OpenTBUI/releases) 中找到  
+预编译的工件 aar 和 示例 demo apk 可以在 [Release](https://github.com/1503Dev/OpenTBUI/releases) 中找到  
 
-本项目的 IndicatorSeekBar 工件是基于 [warkiz/IndicatorSeekBar](https://github.com/warkiz/IndicatorSeekBar) 修改而来的
+你也可以通过 Maven 仓库引入  
+build.gradle.kts:
+```kotlin
+repositories {
+    maven {
+        url = uri("https://maven.1503dev.top")
+    }
+}
 
-demo 已在 Android 5.0(存在一些问题), Android 8.1, Android 12, Android 16 上测试通过
+dependencies {
+    implementation("dev1503.opentbui:opentbui:1.0.0")
+}
+```
+
+
+
+本项目的 IndicatorSeekBar 代码是基于 [warkiz/IndicatorSeekBar](https://github.com/warkiz/IndicatorSeekBar) 修改而来的
+
+demo 已在 Android 5.0(存在一些问题), Android 8.1, Android 12, Android 15, Android 16 上测试通过
 
 ## 开放源代码许可
-_不包含 IndicatorSeekBar 的依赖许可_
 
 - OpenTBUI - [LGPLv3](LICENSE)
 - IndicatorSeekBar - Apache-2.0

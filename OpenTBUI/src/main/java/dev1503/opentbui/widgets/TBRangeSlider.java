@@ -11,43 +11,38 @@ import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
 
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBRangeSlider extends TBWidget{
-    Context context;
-    TBRangeSlider self = this;
+    private Context context;
 
-    TextView textView;
-    IndicatorSeekBar seekBar;
+    private TextView textView;
+    private IndicatorSeekBar seekBar;
 
-    OnValueChangeListener onValueChangeListener;
-    boolean isSlideByUser = true;
+    private OnValueChangeListener onValueChangeListener;
+    private boolean isSlideByUser = true;
 
     public TBRangeSlider(OpenTBUI openTBUI, String name, String path, float min, float max, int decimalScale, OnValueChangeListener seekChangeListener) {
         super(openTBUI, name, path);
-        view = (LinearLayout) LinearLayout.inflate(openTBUI.getContext(), R.layout.list_slider, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(openTBUI.getContext(), 40)
-        ));
-        textView = view.findViewWithTag("binding_1");
-        seekBar = view.findViewById(R.id.seekbar);
+        view = UIFactory.buildSliderLayout(openTBUI.getContext());
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_BINDING_1);
+        seekBar = (IndicatorSeekBar) view.findViewWithTag(UIFactory.TAG_SEEKBAR);
         textView.setText(name);
         this.onValueChangeListener = seekChangeListener;
         seekBar.setMin(min);
         seekBar.setMax(max);
         seekBar.setDecimalScale(decimalScale);
         seekBar.setTickCount(0);
-        seekBar.mShowTickText = false;
+        seekBar.setShowTickText(false);
         seekBar.setOnSeekChangeListener(new OnSeekChangeListener() {
             @Override
             public void onSeeking(SeekParams seekParams) {
                 if (seekParams.fromUser) {
                     if (onValueChangeListener != null) {
-                        onValueChangeListener.onValueChange(self, seekBar.getProgress());
+                        onValueChangeListener.onValueChange(TBRangeSlider.this, seekParams.progressFloat);
                     }
                     if (openTBUI.getStatusManager() != null && isSlideByUser) {
-                        openTBUI.getStatusManager().setValue(self, getPath(), seekBar.getProgress());
+                        openTBUI.getStatusManager().setValue(TBRangeSlider.this, getPath(), seekParams.progressFloat);
                     }
                 }
             }
@@ -94,21 +89,28 @@ public class TBRangeSlider extends TBWidget{
         value = Math.max(value, seekBar.getMin());
         value = Math.min(value, seekBar.getMax());
         isSlideByUser = false;
-        seekBar.setProgress((int) value);
+        seekBar.setProgress(value);
         isSlideByUser = true;
         return this;
     }
     public TBRangeSlider setValue(float value) {
         value = Math.max(value, seekBar.getMin());
         value = Math.min(value, seekBar.getMax());
-        seekBar.setProgress((int) value);
+        seekBar.setProgress(value);
         if (onValueChangeListener != null) {
-            onValueChangeListener.onValueChange(self, seekBar.getProgress());
+            onValueChangeListener.onValueChange(TBRangeSlider.this, seekBar.getProgressFloat());
         }
         return this;
     }
     public float getValue() {
-        return seekBar.getProgress();
+        return seekBar.getProgressFloat();
+    }
+
+    @Override
+    public void syncValue(double value) {
+        if (Double.compare(getValue(), value) != 0) {
+            setValueWithoutNotify((float) value);
+        }
     }
     public TBRangeSlider setMin(float min) {
         seekBar.setMin(min);

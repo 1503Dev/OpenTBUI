@@ -17,8 +17,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev1503.opentbui.BottomSheet;
-import dev1503.opentbui.R;
 import dev1503.opentbui.TBTheme;
+import dev1503.opentbui.UIFactory;
 import dev1503.opentbui.view.ColorAlphaPicker;
 import dev1503.opentbui.view.ColorHuePicker;
 
@@ -42,18 +42,18 @@ public class ColorPicker extends BottomSheet {
 
     @SuppressLint("SetTextI18n")
     public ColorPicker(Context context, TBTheme theme, @ColorInt int defaultColor, OnColorPickListener onColorPickListener){
-        super(context, theme, (LinearLayout) LinearLayout.inflate(context, R.layout.dialog_color_picker, null));
+        super(context, theme, (LinearLayout) UIFactory.buildColorPickerDialog(context));
 
-        colorPicker = contentView.findViewById(R.id.picker);
-        colorHuePicker = contentView.findViewById(R.id.hue);
-        colorAlphaPicker = contentView.findViewById(R.id.alpha);
-        valueHex = contentView.findViewById(R.id.value_hex);
-        valueR = contentView.findViewById(R.id.value_r);
-        valueG = contentView.findViewById(R.id.value_g);
-        valueB = contentView.findViewById(R.id.value_b);
-        valueA = contentView.findViewById(R.id.value_a);
-        btnBack = contentView.findViewWithTag("binding_1");
-        btnDone = contentView.findViewWithTag("binding_2");
+        colorPicker = contentView.findViewWithTag(UIFactory.TAG_PICKER);
+        colorHuePicker = contentView.findViewWithTag(UIFactory.TAG_HUE);
+        colorAlphaPicker = contentView.findViewWithTag(UIFactory.TAG_ALPHA);
+        valueHex = contentView.findViewWithTag(UIFactory.TAG_VALUE_HEX);
+        valueR = contentView.findViewWithTag(UIFactory.TAG_VALUE_R);
+        valueG = contentView.findViewWithTag(UIFactory.TAG_VALUE_G);
+        valueB = contentView.findViewWithTag(UIFactory.TAG_VALUE_B);
+        valueA = contentView.findViewWithTag(UIFactory.TAG_VALUE_A);
+        btnBack = contentView.findViewWithTag(UIFactory.TAG_BACK);
+        btnDone = contentView.findViewWithTag(UIFactory.TAG_DONE);
 
         colorPicker.setHuePicker(colorHuePicker);
         colorPicker.addOnColorChangeListener(color -> {

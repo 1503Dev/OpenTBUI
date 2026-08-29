@@ -7,6 +7,8 @@ import android.graphics.drawable.RippleDrawable;
 import android.widget.Switch;
 
 public class TBTheme {
+    public static final TBTheme DEFAULT = new TBTheme(Color.parseColor("#00E676"), Color.parseColor("#43A047"));
+
     int[][] switchStates;
     int[] switchThumbColors;
     int[] switchTrackColors;

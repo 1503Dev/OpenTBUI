@@ -25,7 +25,7 @@ import dev1503.opentbui.widgets.TBWidget;
 
 public class Category {
     String name;
-    int iconId;
+    Icon icon;
 
     List<TBWidget> widgets = new ArrayList<>();
     LinearLayout viewContainer;
@@ -33,11 +33,11 @@ public class Category {
     Activity context;
     OpenTBUI openTBUI;
 
-    public Category (OpenTBUI openTBUI, String name, int iconId) {
+    public Category (OpenTBUI openTBUI, String name, Icon icon) {
         this.context = openTBUI.getActivity();
         this.openTBUI = openTBUI;
         this.name = name;
-        this.iconId = iconId;
+        this.icon = icon;
 //        featuresAdapter = new FeaturesAdapter(context, widgets);
         viewContainer = new LinearLayout(context);
         viewContainer.setOrientation(LinearLayout.VERTICAL);
@@ -49,6 +49,10 @@ public class Category {
 
     public String getName() {
         return name;
+    }
+
+    public Icon getIcon() {
+        return icon;
     }
 
     public Category addWidget(TBWidget widget, String path) {

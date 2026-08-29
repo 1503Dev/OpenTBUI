@@ -1,16 +1,15 @@
 package dev1503.opentbui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static dev1503.opentbui.Utils.dp2px;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView view = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.category_list_item, parent, false);
+        TextView view = UIFactory.buildCategoryItem(parent.getContext());
 
         allTextViews.add(view);
 
@@ -67,14 +65,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
             if (textView != null && category != null) {
                 textView.setText(category.name);
 
-                if (category.iconId != 0) {
-                    Drawable icon = ResourcesCompat.getDrawable(context.getResources(), category.iconId, null);
-                    textView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
+                Icon icon = category.getIcon();
+                if (icon != null) {
+                    Drawable iconDrawable = icon.resolve(context);
+                    if (iconDrawable != null) {
+                        int size = dp2px(context, Icon.DEFAULT_SIZE_DP);
+                        iconDrawable.setBounds(0, 0, size, size);
+                        textView.setCompoundDrawables(iconDrawable, null, null, null);
+                    }
                 }
                 boolean isSelected = category.equals(selectedCategory);
                 textView.setSelected(isSelected);
-                float elevation = isSelected ?
-                        context.getResources().getDimension(R.dimen.category_list_item_active_elevation) : 0.0f;
+                float elevation = isSelected ? dp2px(context, 4) : 0.0f;
                 textView.setElevation(elevation);
             }
         }
@@ -135,11 +137,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     public interface OnTextViewCreatedListener {
-        /**
-         * @param textView 被创建的 TextView
-         * @param position 位置（在onBindViewHolder中调用时是准确的）
-         * @param isInitialCreation 是否是初次创建（true=onCreateViewHolder, false=onBindViewHolder）
-         */
         void onTextViewCreated(TextView textView, int position, boolean isInitialCreation);
     }
 

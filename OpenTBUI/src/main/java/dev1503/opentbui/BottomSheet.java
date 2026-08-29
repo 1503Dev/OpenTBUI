@@ -4,7 +4,9 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.DisplayMetrics;
+import android.graphics.Point;
+import android.os.Build;
+import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -62,9 +64,18 @@ public class BottomSheet {
     private static int getScreenHeight(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         if (windowManager != null) {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.heightPixels;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                android.view.WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+                android.graphics.Rect bounds = windowMetrics.getBounds();
+                return bounds.height();
+            } else {
+                Display display = windowManager.getDefaultDisplay();
+                if (display != null) {
+                    Point size = new Point();
+                    display.getSize(size);
+                    return size.y;
+                }
+            }
         }
         return 0;
     }

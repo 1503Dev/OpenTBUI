@@ -24,7 +24,7 @@ import java.util.List;
 
 import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBToggle extends TBWidget {
     private static final long STATUS_VIEW_ANIM_TICK = 200;
@@ -47,7 +47,7 @@ public class TBToggle extends TBWidget {
 
     public TBToggle(OpenTBUI openTBUI, String name, String path, boolean isChecked, OnCheckedChangeListener onCheckedChangeListener) {
         super(openTBUI, name, path);
-        toggleView = (LinearLayout) LinearLayout.inflate(context, R.layout.list_toggle, null);
+        toggleView = (LinearLayout) UIFactory.buildToggleLayout(context);
         toggleView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 dp2px(context, 40)
@@ -57,8 +57,8 @@ public class TBToggle extends TBWidget {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        textView = toggleView.findViewWithTag("binding_1");
-        switchCompat = toggleView.findViewWithTag("binding_2");
+        textView = (TextView) toggleView.findViewWithTag(UIFactory.TAG_BINDING_1);
+        switchCompat = (SwitchCompat) toggleView.findViewWithTag(UIFactory.TAG_TOGGLE);
         textView.setText(name);
 
         isStatusViewVisible = !isChecked;
@@ -230,6 +230,14 @@ public class TBToggle extends TBWidget {
 
     public boolean isChecked() {
         return switchCompat.isChecked();
+    }
+
+    @Override
+    public void syncValue(double value) {
+        boolean checked = value >= 1;
+        if (isChecked() != checked) {
+            setCheckedWithoutNotify(checked);
+        }
     }
 
     public TBToggle setOnCheckedChangeListener(OnCheckedChangeListener listener) {

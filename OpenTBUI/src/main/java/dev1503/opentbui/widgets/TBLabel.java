@@ -8,21 +8,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBLabel extends TBWidget{
     TextView textView;
 
     public TBLabel(OpenTBUI openTBUI, String name) {
         super(openTBUI, name, null);
-        view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_label, null);
-        textView = view.findViewWithTag("text");
+        view = UIFactory.buildLabelLayout(context);
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_TEXT);
         textView.setText(name);
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(context, 40)
-        );
-        view.setLayoutParams(layoutParams);
+
     }
     public TBLabel(OpenTBUI openTBUI) {
         this(openTBUI, null);

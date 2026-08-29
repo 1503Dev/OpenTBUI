@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categories"
+        android:tag="_tb_categories"
         android:background="#80000000"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -15,6 +16,7 @@
         android:layout_alignParentStart="true"/>
     <ScrollView
         android:id="@+id/optionsContainer"
+        android:tag="_tb_options_container"
         android:background="#80000000"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -22,6 +24,7 @@
         android:layout_alignParentEnd="false">
         <LinearLayout
             android:id="@+id/options"
+            android:tag="_tb_options"
             android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
@@ -40,6 +43,7 @@
             android:gravity="center"
             android:layout_gravity="top|center_horizontal"
             android:id="@+id/remaining_time_text"
+            android:tag="_tb_remaining_time"
             android:background="@drawable/settings_icon_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,6 +57,7 @@
             android:paddingLeft="16dp"
             android:paddingTop="16dp"
             android:id="@+id/extraBottonsLayout"
+            android:tag="_tb_extra_buttons"
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>

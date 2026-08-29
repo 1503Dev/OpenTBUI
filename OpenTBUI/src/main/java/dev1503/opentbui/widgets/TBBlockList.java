@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
-import dev1503.opentbui.Utils;
+import dev1503.opentbui.UIFactory;
 import dev1503.opentbui.view.CircleSwitch;
 import dev1503.opentbui.view.Cube3DView;
 
@@ -24,11 +23,7 @@ public class TBBlockList extends TBWidget{
     public TBBlockList(OpenTBUI openTBUI, String path, OnSelectedItemChangeListener listener) {
         super(openTBUI, "", path);
         onSelectedItemChangeListener = listener;
-        view = (FlexboxLayout) LinearLayout.inflate(context, R.layout.list_block_list, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
+        view = UIFactory.buildBlockListLayout(context);
     }
     public TBBlockList(OpenTBUI openTBUI, String path) {
         this(openTBUI, path, null);

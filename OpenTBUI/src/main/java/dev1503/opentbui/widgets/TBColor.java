@@ -13,7 +13,7 @@ import androidx.annotation.ColorInt;
 
 import dev1503.opentbui.picker.ColorPicker;
 import dev1503.opentbui.OpenTBUI;
-import dev1503.opentbui.R;
+import dev1503.opentbui.UIFactory;
 
 public class TBColor extends TBWidget{
     TextView textView;
@@ -24,15 +24,11 @@ public class TBColor extends TBWidget{
     public TBColor(OpenTBUI openTBUI, String name, String path, @ColorInt int defaultColor, ColorPicker.OnColorPickListener onColorPickListener) {
         super(openTBUI, name, path);
         this.onColorPickListener = onColorPickListener;
-        view = (LinearLayout) LinearLayout.inflate(context, R.layout.list_color, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp2px(context, 40)
-        ));
-        imageView = view.findViewWithTag("binding_2");
+        view = UIFactory.buildColorLayout(context);
+        imageView = (ImageView) view.findViewWithTag(UIFactory.TAG_BINDING_2);
         setColor(defaultColor);
 
-        textView = view.findViewWithTag("binding_1");
+        textView = (TextView) view.findViewWithTag(UIFactory.TAG_BINDING_1);
         textView.setText(name);
         view.setOnClickListener(view1 -> {
             new ColorPicker(context, openTBUI.getTheme(), color, color1 -> {
@@ -83,6 +79,13 @@ public class TBColor extends TBWidget{
 
     public @ColorInt int getColor() {
         return color;
+    }
+
+    @Override
+    public void syncValue(double value) {
+        if (getColor() != (int) value) {
+            setColorWithoutNotify((int) value);
+        }
     }
 
     public String getName() {

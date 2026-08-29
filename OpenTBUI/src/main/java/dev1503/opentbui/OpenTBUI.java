@@ -5,7 +5,6 @@ import static dev1503.opentbui.Utils.dp2px;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -18,9 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +40,7 @@ import dev1503.opentbui.widgets.TBToggle;
 import dev1503.opentbui.widgets.TBWidget;
 
 public class OpenTBUI {
-    public static final String VERSION_NAME = "v202511151732.6";
+    public static final String VERSION_NAME = "v1.0.0.7";
 
     public static final int WINDOW_TYPE_POPUP = 0;
     public static final int WINDOW_TYPE_GLOBAL = 1;
@@ -72,10 +74,9 @@ public class OpenTBUI {
     ViewGroup extraButtonsLayout;
 
     Runnable onHideListener;
-    TBTheme theme;
+    TBTheme theme = TBTheme.DEFAULT;
 
     List<TextView> categoryTextViews = new ArrayList<>();
-    int tipBarIconSize = 0;
 
     public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, ViewGroup overlayLayout) {
         this.activity = activity;
@@ -84,11 +85,9 @@ public class OpenTBUI {
         this.rootView = rootView;
         this.statusManager = statusManager;
 
-        tipBarIconSize = dp2px(context, 16);
-
         this.shortcutLayout = new FrameLayout(context);
         contentView = overlayLayout;
-        categoriesView = contentView.findViewById(R.id.categories);
+        categoriesView = contentView.findViewWithTag(UIFactory.TAG_CATEGORIES);
         categoriesView.setLayoutManager(new LinearLayoutManager(context));
         categoriesAdapter = new CategoriesAdapter(context, categories);
         categoriesView.setAdapter(categoriesAdapter);
@@ -97,7 +96,7 @@ public class OpenTBUI {
             onCategoryClick(category);
         });
 
-        featuresView = contentView.findViewById(R.id.options);
+        featuresView = contentView.findViewWithTag(UIFactory.TAG_OPTIONS);
 
         contentView.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -167,16 +166,13 @@ public class OpenTBUI {
                 ));
             }
         });
-        remainingTimeText = contentView.findViewById(R.id.remaining_time_text);
-        extraButtonsLayout = contentView.findViewById(R.id.extraBottonsLayout);
-        remainingTimeText.setText(activity.getString(R.string.powered_by, "1503Dev/OpenTBUI " + VERSION_NAME));
+        remainingTimeText = contentView.findViewWithTag(UIFactory.TAG_REMAINING_TIME_TEXT);
+        extraButtonsLayout = contentView.findViewWithTag(UIFactory.TAG_EXTRA_BUTTONS);
+        remainingTimeText.setText("Powered by 1503Dev/OpenTBUI " + VERSION_NAME);
 
     }
-    public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView, int overlayLayoutResId) {
-        this(activity, statusManager, windowType, rootView, (ViewGroup) ViewGroup.inflate(activity, overlayLayoutResId, null));
-    }
     public OpenTBUI(Activity activity, StatusManager statusManager, int windowType, View rootView) {
-        this(activity, statusManager, windowType, rootView, R.layout.toolbox_overlay);
+        this(activity, statusManager, windowType, rootView, UIFactory.buildToolboxOverlay(activity));
     }
     public OpenTBUI(Activity activity, int windowType, View rootView) {
         this(activity, new StatusManager(), windowType, rootView);
@@ -256,6 +252,7 @@ public class OpenTBUI {
             if (!isShown) {
                 try {
                     popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+                    isShown = true;
                 } catch (Exception ignored) {
                 }
             }
@@ -267,7 +264,7 @@ public class OpenTBUI {
         }
     }
     public void hide() {
-        if (isShown) {
+        if (isShown && windowType != WINDOW_TYPE_POPUP) {
             if (onHideListener != null) {
                 onHideListener.run();
             }
@@ -296,6 +293,7 @@ public class OpenTBUI {
             if (!isShown) {
                 try {
                     popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+                    isShown = true;
                 } catch (Exception ignored) {
                 }
             }
@@ -311,24 +309,26 @@ public class OpenTBUI {
         onCategoryClick(category);
     }
     public void selectCategory(int pos) {
+        if (pos < 0 || pos >= categories.size()) {
+            return;
+        }
         categoriesAdapter.setSelectedCategory(pos);
         onCategoryClick(categories.get(pos));
     }
-    void hideSystemUI() {
-        View decorView = rootView;
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
+    public void hideSystemUI() {
+        if (activity == null || activity.isFinishing()) return;
+        WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false);
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(
+                activity.getWindow(), activity.getWindow().getDecorView());
+        if (controller != null) {
+            controller.hide(WindowInsetsCompat.Type.systemBars());
+            controller.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
     }
-    public Category addCategory(String name, int iconId){
-        Category category = new Category(this, name, iconId);
-        categories.add(category);
-//        categoriesAdapter.addCategory(category);
+    public Category addCategory(String name, Icon icon){
+        Category category = new Category(this, name, icon);
+        categoriesAdapter.addCategory(category);
         return category;
     }
     void onCategoryClick(Category category) {
@@ -347,6 +347,7 @@ public class OpenTBUI {
         refreshTheme();
         return this;
     }
+
     public OpenTBUI refreshTheme() {
         if (theme != null) {
             for (Category category : categories) {
@@ -361,7 +362,10 @@ public class OpenTBUI {
                                 theme.getSwitchStates(),
                                 theme.getSwitchTrackColors()
                         ));
-                        switchCompat.setBackground(theme.getRippleDrawable());
+                        // 只在首次设置 ripple background，避免重置正在进行的动画
+                        if (!(switchCompat.getBackground() instanceof android.graphics.drawable.RippleDrawable)) {
+                            switchCompat.setBackground(theme.getRippleDrawable());
+                        }
 
                         View statusView = ((TBToggle) widget).getStatusView();
                         statusView.setBackgroundColor(theme.getColor1());
@@ -412,13 +416,6 @@ public class OpenTBUI {
         return this.theme;
     }
 
-//    public OpenTBUI setFocusable(boolean focusable) {
-//        if (windowType == WINDOW_TYPE_POPUP) {
-//            popupWindow.setFocusable(focusable);
-//        }
-//        return this;
-//    }
-
     public OpenTBUI setFeaturesViewWidth(int width) {
         ViewGroup.LayoutParams layoutParams = featuresView.getLayoutParams();
         layoutParams.width = width;
@@ -438,15 +435,17 @@ public class OpenTBUI {
         this.statusManager = statusManager;
         return this;
     }
-    public ImageView addExtraButton(int drawableResId, View.OnClickListener onClickListener) {
+    public ImageView addExtraButton(Icon icon, View.OnClickListener onClickListener) {
         ImageView imageView = new ImageView(context);
-        imageView.setImageResource(drawableResId);
+        if (icon != null) {
+            imageView.setImageDrawable(icon.resolve(context));
+        }
         ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(
                 dp2px(context, 48),
                 dp2px(context, 48)
         );
         imageView.setLayoutParams(layoutParams);
-        imageView.setBackgroundResource(R.drawable.settings_icon_background);
+        imageView.setBackground(UIFactory.buildSettingsIconBackground(context));
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imageView.setImageTintList(ColorStateList.valueOf(0xFFFFFFFF));
         imageView.setOnClickListener(onClickListener);
@@ -455,57 +454,6 @@ public class OpenTBUI {
     }
 
     public TipBar getTipBar() {
-        return new TipBar();
-    }
-
-    public class TipBar {
-        public TipBar setText(CharSequence text) {
-            remainingTimeText.setText(text);
-            return this;
-        }
-        public TipBar show() {
-            remainingTimeText.setVisibility(View.VISIBLE);
-            return this;
-        }
-        public TipBar hide() {
-            remainingTimeText.setVisibility(View.GONE);
-            return this;
-        }
-        public TipBar setIcon(int drawableResId) {
-            Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableResId, null);
-            if (drawable != null) {
-                drawable.setBounds(0, 0, tipBarIconSize, tipBarIconSize);
-            }
-            remainingTimeText.setCompoundDrawablesRelative(null, null, drawable, null);
-            return this;
-        }
-        public TipBar setIconSize(int size) {
-            tipBarIconSize = size;
-            Drawable drawable = remainingTimeText.getCompoundDrawablesRelative()[2];
-            if (drawable != null) {
-                drawable.setBounds(0, 0, size, size);
-            }
-            remainingTimeText.setCompoundDrawablesRelative(null, null, drawable, null);
-            return this;
-        }
-        public TipBar setIconSizeDp(int sizeDp) {
-            setIconSize(dp2px(context, sizeDp));
-            return this;
-        }
-        public TipBar removeIcon() {
-            remainingTimeText.setCompoundDrawablesRelative(null, null, null, null);
-            return this;
-        }
-        public TipBar setIconPadding(int padding) {
-            remainingTimeText.setCompoundDrawablePadding(padding);
-            return this;
-        }
-        public TextView getTextView() {
-            return remainingTimeText;
-        }
-        public TipBar setOnClickListener(View.OnClickListener onClickListener) {
-            remainingTimeText.setOnClickListener(onClickListener);
-            return this;
-        }
+        return new TipBar(remainingTimeText, context);
     }
 }
